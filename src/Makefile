@@ -1,20 +1,32 @@
-CXXFLAGS       = -std=c++20 -O2
+include ../Makefile.vars
+
 INCS           = -I../include
-INSTALLPREFIX  = /usr/local
-LDFLAGS        = -std=c++20
-LIBTOOL        = libtool
-OBJFILES       = dwm_gmk_dirfiles.lo \
+LTINSTALL     := ${LIBTOOL} --mode=install ../install-sh
+LTUNINSTALL   := ${LIBTOOL} --quiet --mode=uninstall rm -f
+OBJFILESNP     = dwm_gmk_dirfiles.lo \
                  dwm_gmk_relpath.lo \
                  dwm_gmk_setup.lo \
                  dwm_gmk_thisdir.lo
-shlib_version  = 0:0:0
+OBJFILES       = $(OBJFILESNP:%.lo=../obj/%.lo)
+shlib_version  = $(shell ../getvers.sh -s)
 
-libdwm_gmk.la: ${OBJFILES}
-	${LIBTOOL} --mode=link --tag=CXX ${CXX} -o $@ $^ \
+../lib/libdwm_gmk.la: ${OBJFILES}
+	${LIBTOOL} --mode=link --tag=CXX ${CXX} -o $@ $^ -shared \
 	 -rpath ${INSTALLPREFIX}/lib -version-info ${shlib_version}
 
-%.lo: %.cc ../include/dwm_gmk.h
+../obj/%.lo: %.cc ../include/dwm_gmk.h
 	${LIBTOOL} --mode=compile --tag=CXX ${CXX} ${CXXFLAGS} ${INCS} -c $< -o $@
 
+tarprep: ${TARDIR}/lib/libdwm_gmk.la
+
+${TARDIR}/lib/libdwm_gmk.la: ../lib/libdwm_gmk.la
+	${LTINSTALL} -c $< ${TARDIR}/lib/libdwm_gmk.la
+
+distclean:: clean clean-tarprep
+
 clean::
-	${LIBTOOL} --mode=clean rm -f libdwm_gmk.la ${OBJFILES}
+	${LIBTOOL} --mode=clean rm -f ../lib/libdwm_gmk.la ${OBJFILES}
+
+clean-tarprep::
+	@${LTUNINSTALL} ${TARDIR}/lib/libdwm_gmk.la
+

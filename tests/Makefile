@@ -3,27 +3,22 @@ load ../src/.libs/libdwm_gmk.so(dwm_gmk_setup)
 tests:: test_relpath test_dirfiles
 
 test_relpath::
-	@if [ $(dwm_relpath ../src,.) = ../tests \
-              -a $(dwm_relpath .,../src) = ../src \
-	      -a $(dwm_relpath .,..) = .. \
-	      -a $(dwm_relpath ..,.) = tests \
-	      -a $(dwm_relpath .,.) = . \
-	      -a $(dwm_relpath $(dwm_thisdir ),../src) = ../src ]; then \
-	  echo relpath tests passed ; \
-	fi
+	@[ $(dwm_relpath ../src,$(dwm_thisdir )) = ../tests ] || exit
+	@[ $(dwm_relpath $(dwm_thisdir ),../src) = ../src ] || exit
+	@[ $(dwm_relpath $(dwm_thisdir ),..) = .. ] || exit
+	@[ $(dwm_relpath ..,$(dwm_thisdir )) = tests ] || exit
+	@[ $(dwm_relpath $(dwm_thisdir ),$(dwm_thisdir )) = . ] || exit
+	@[ $(dwm_relpath $(dwm_thisdir ),../src) = ../src ] || exit
+	@[ /$(dwm_relpath /,$(dwm_thisdir )) = `pwd` ] || exit
+	@echo relpath tests passed
 
 test_dirfiles::
-	@if [ $(dwm_dirfiles .,Makefile) = Makefile \
-	      -a $(dwm_dirfiles ../src,dwm_gmk_dirfiles\.cc) = dwm_gmk_dirfiles.cc \
-	      -a -n "$(dwm_dirfiles ../src,.+\.cc)" \
-	      -a -z "$(dwm_dirfiles .,Make\.ile)" \
-	      -a "$(dwm_dirfiles .,Make.ile)" = Makefile \
-	      -a $(words $(dwm_dirfiles ../src,.+\.cc)) -ge 4 ]; then \
-	  echo dirfiles tests passed ; \
-	fi
+	@[ $(dwm_dirfiles .,Makefile) = Makefile ] || exit
+	@[ $(dwm_dirfiles ../src,dwm_gmk_dirfiles\.cc) = dwm_gmk_dirfiles.cc ] || exit
+	@[ -n "$(dwm_dirfiles ../src,.+\.cc)" ] || exit
+	@[ -z "$(dwm_dirfiles .,Make\.ile)" ] || exit
+	@[ "$(dwm_dirfiles .,Make.ile)" = Makefile ] || exit
+	@[ $(words $(dwm_dirfiles ../src,.+\.cc)) -ge 4 ] || exit
+	@echo dirfiles tests passed
 
-$(info $(call dwm_thisdir))
-$(info $(dwm_relpath .,..))
-$(info $(dwm_relpath .,../src))
-$(info $(dwm_relpath ../src,.))
-
+$(info $(dwm_dirfiles ../src,.+\.cc))

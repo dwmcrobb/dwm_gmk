@@ -1,0 +1,8 @@
+prefix=@prefix@
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+
+Name: dwmgmk
+Description: GNU make extensions
+Version: @TAGVERSION@
+Requires:

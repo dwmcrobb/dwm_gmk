@@ -1,0 +1,15 @@
+name: "dwmgmk"
+version: "@TAGVERSION@"
+origin: "devel/dwmgmk"
+prefix: "@prefix@"
+www: "http://www.mcplex.net"
+maintainer: "dwmcrobb@me.com"
+comment: "GNU make extensions"
+desc: "A handful of GNU make extensions as a loadable module."
+licenselogic: "single"
+licenses: ["GPL"]
+categories: ["devel"]
+files: {
+}
+scripts: {
+}

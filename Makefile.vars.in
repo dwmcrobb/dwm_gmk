@@ -1,0 +1,8 @@
+CXX              = @CXX@
+CXXFLAGS         = @CXXFLAGS@
+INSTALLPREFIX    = @prefix@
+LDFLAGS          = @LDFLAGS@
+LIBTOOL          = @LIBTOOL@
+OSNAME           = @OSNAME@
+TARDIR           = @TARDIR@@prefix@
+VERSION          = @DWM_VERSION@

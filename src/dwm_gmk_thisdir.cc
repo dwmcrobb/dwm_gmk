@@ -6,7 +6,6 @@ extern "C" {
 #include "dwm_gmk.h"
 
 #include <filesystem>
-#include <iostream>
 #include <string>
 
 extern std::string  g_dwm_gmk_thisdir;
@@ -24,7 +23,6 @@ char *dwm_gmk_thisdir(const char *name, unsigned int argc, char *argv[])
     if (rc) {
       rc[g_dwm_gmk_thisdir.size()] = 0;
       strncpy(rc, g_dwm_gmk_thisdir.c_str(), g_dwm_gmk_thisdir.size());
-      std::cerr << "thisdir: '" << rc << "'\n";
     }
   }
   return rc;

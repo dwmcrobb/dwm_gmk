@@ -9,6 +9,8 @@ extern "C" {
 #include <iostream>
 #include <string>
 
+extern std::string  g_dwm_gmk_thisdir;
+
 namespace fs = std::filesystem;
 
 //----------------------------------------------------------------------------
@@ -17,25 +19,13 @@ namespace fs = std::filesystem;
 char *dwm_gmk_thisdir(const char *name, unsigned int argc, char *argv[])
 {
   char  *rc = 0;
-  char  *mkfileList = gmk_expand("$(MAKEFILE_LIST)");
-  if (mkfileList) {
-    std::cerr << "mkfileList: '" << mkfileList << "'\n";
-    std::string  s(mkfileList);
-    size_t  idx = s.find_last_of(' ');
-    if (idx == std::string::npos) {
-      idx = 0;
+  if (! g_dwm_gmk_thisdir.empty()) {
+    rc = gmk_alloc(g_dwm_gmk_thisdir.size() + 1);
+    if (rc) {
+      rc[g_dwm_gmk_thisdir.size()] = 0;
+      strncpy(rc, g_dwm_gmk_thisdir.c_str(), g_dwm_gmk_thisdir.size());
+      std::cerr << "thisdir: '" << rc << "'\n";
     }
-    char  cwd[PATH_MAX];
-    if (getcwd(cwd, sizeof(cwd))) {
-      fs::path  mkfile = fs::weakly_canonical(s.substr(idx));
-      std::cerr << "mkfile: '" << mkfile.string() << "'\n";
-      fs::path  mkfileDir = mkfile.parent_path();
-      std::string  mkfileDirStr = mkfileDir.string();
-      std::cerr << "mkfileDirStr: " << mkfileDirStr << '\n';
-      char *paths[2] = { cwd, mkfileDirStr.data() };
-      rc = dwm_gmk_relpath("dwm_relpath", 2, paths);
-    }
-    gmk_free(mkfileList);
   }
   return rc;
 }

@@ -1,10 +1,12 @@
-include ../Makefile.vars
-
-ifeq ("${OSNAME}","darwin")
+ifeq ("$(shell uname)","Darwin")
 load ../lib/.libs/libdwm_gmk.dylib(dwm_gmk_setup)
 else
 load ../lib/.libs/libdwm_gmk.so(dwm_gmk_setup)
 endif
+
+$(call $(dwm_gmk_init))
+
+include ../Makefile.vars
 
 tests:: test_relpath test_dirfiles
 
@@ -28,5 +30,5 @@ test_dirfiles::
 	@echo dirfiles tests passed
 
 $(info thisdir $(dwm_thisdir ))
-$(info relpath ../src thisdir $(dwm_relpath ../src,$(dwm_thisdir)))
+$(info relpath thisdir ../src: $(dwm_relpath $(dwm_thisdir),../src))
 # $(info $(dwm_dirfiles ../src,.+\.cc))

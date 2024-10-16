@@ -5,6 +5,7 @@ extern "C" {
   
 #include "dwm_gmk.h"
 
+#include <cstring>
 #include <filesystem>
 #include <string>
 

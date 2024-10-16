@@ -6,6 +6,7 @@ extern "C" {
 #include "dwm_gmk.h"
 
 #include <filesystem>
+#include <iostream>
 #include <string>
 
 namespace fs = std::filesystem;
@@ -18,6 +19,7 @@ char *dwm_gmk_thisdir(const char *name, unsigned int argc, char *argv[])
   char  *rc = 0;
   char  *mkfileList = gmk_expand("$(MAKEFILE_LIST)");
   if (mkfileList) {
+    std::cerr << "mkfileList: '" << mkfileList << "'\n";
     std::string  s(mkfileList);
     size_t  idx = s.find_last_of(' ');
     if (idx == std::string::npos) {
@@ -26,8 +28,10 @@ char *dwm_gmk_thisdir(const char *name, unsigned int argc, char *argv[])
     char  cwd[PATH_MAX];
     if (getcwd(cwd, sizeof(cwd))) {
       fs::path  mkfile = fs::weakly_canonical(s.substr(idx));
+      std::cerr << "mkfile: '" << mkfile.string() << "'\n";
       fs::path  mkfileDir = mkfile.parent_path();
       std::string  mkfileDirStr = mkfileDir.string();
+      std::cerr << "mkfileDirStr: " << mkfileDirStr << '\n';
       char *paths[2] = { cwd, mkfileDirStr.data() };
       rc = dwm_gmk_relpath("dwm_relpath", 2, paths);
     }

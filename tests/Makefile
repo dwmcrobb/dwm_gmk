@@ -1,9 +1,15 @@
-load ../src/.libs/libdwm_gmk.so(dwm_gmk_setup)
+include ../Makefile.vars
+
+ifeq ("${OSNAME}","darwin")
+load ../lib/.libs/libdwm_gmk.dylib(dwm_gmk_setup)
+else
+load ../lib/.libs/libdwm_gmk.so(dwm_gmk_setup)
+endif
 
 tests:: test_relpath test_dirfiles
 
 test_relpath::
-	@[ $(dwm_relpath ../src,$(dwm_thisdir )) = ../tests ] || exit
+	@[ $(dwm_relpath ../src,$(dwm_thisdir )) = ../tests ] || echo "failed" && exit
 	@[ $(dwm_relpath $(dwm_thisdir ),../src) = ../src ] || exit
 	@[ $(dwm_relpath $(dwm_thisdir ),..) = .. ] || exit
 	@[ $(dwm_relpath ..,$(dwm_thisdir )) = tests ] || exit
@@ -21,4 +27,6 @@ test_dirfiles::
 	@[ $(words $(dwm_dirfiles ../src,.+\.cc)) -ge 4 ] || exit
 	@echo dirfiles tests passed
 
-$(info $(dwm_dirfiles ../src,.+\.cc))
+$(info thisdir $(dwm_thisdir ))
+$(info relpath ../src thisdir $(dwm_relpath ../src,$(dwm_thisdir)))
+# $(info $(dwm_dirfiles ../src,.+\.cc))

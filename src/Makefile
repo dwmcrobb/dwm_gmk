@@ -12,7 +12,7 @@ OBJFILES       = $(OBJFILESNP:%.lo=../obj/%.lo)
 shlib_version  = $(shell ../getvers.sh -s)
 
 ../lib/libdwm_gmk.la: ${OBJFILES}
-	${LIBTOOL} --mode=link --tag=CXX ${CXX} -o $@ $^ -shared \
+	${LIBTOOL} --mode=link --tag=CXX ${CXX} -module -o $@ $^ -shared \
 	 -rpath ${INSTALLPREFIX}/lib -version-info ${shlib_version}
 
 ../obj/%.lo: %.cc ../include/dwm_gmk.h

@@ -7,7 +7,8 @@ test_relpath::
               -a $(dwm_relpath .,../src) = ../src \
 	      -a $(dwm_relpath .,..) = .. \
 	      -a $(dwm_relpath ..,.) = tests \
-	      -a $(dwm_relpath .,.) = . ]; then \
+	      -a $(dwm_relpath .,.) = . \
+	      -a $(dwm_relpath $(dwm_thisdir ),../src) = ../src ]; then \
 	  echo relpath tests passed ; \
 	fi
 

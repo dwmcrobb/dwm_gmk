@@ -7,6 +7,7 @@ LTINSTALL     := ${LIBTOOL} --mode=install ../install-sh
 LTUNINSTALL   := ${LIBTOOL} --quiet --mode=uninstall rm -f
 OBJFILESNP     = dwm_gmk_bison.lo \
                  dwm_gmk_dirfiles.lo \
+                 dwm_gmk_flex.lo \
                  dwm_gmk_init.lo \
                  dwm_gmk_quiet.lo \
                  dwm_gmk_relpath.lo \

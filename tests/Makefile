@@ -15,7 +15,6 @@ test_relpath::
 	@[ "/$(dwm_relpath /,$(dwm_thisdir ))" = $(shell pwd) ] || exit
 	@echo relpath tests passed
 
-
 test_dirfiles::
 	@[ $(dwm_dirfiles .,Makefile) = Makefile ] || exit
 	@[ $(dwm_dirfiles ../src,dwm_gmk_dirfiles\.cc) = dwm_gmk_dirfiles.cc ] || exit

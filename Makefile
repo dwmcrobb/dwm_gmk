@@ -1,11 +1,11 @@
 include Makefile.vars
 
-all:: lib/libdwm_gmk.la
+all:: lib/dwm_gmk.la
 
-lib/libdwm_gmk.la::
+lib/dwm_gmk.la::
 	${MAKE} -C src
 
-tarprep:: lib/libdwm_gmk.la
+tarprep:: lib/dwm_gmk.la
 	${MAKE} -C src $@
 	${MAKE} -C packaging $@
 
@@ -32,5 +32,5 @@ distclean:: clean
 	${MAKE} -C packaging $@
 	rm -Rf autom4te.cache staging
 	rm -f config.log config.status Makefile.vars
-	rm -f libDwm_*.deb
+	rm -f dwm_*.deb
 

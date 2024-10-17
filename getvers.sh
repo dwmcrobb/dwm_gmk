@@ -40,33 +40,11 @@ DwmGetGitTag() {
     fi
 }
 
-DwmGetSvnTag() {
-    svntag=`svn info . 2>/dev/null | grep ^URL | grep 'tags/' | awk -F 'tags/' '{print $2}' | awk -F '/' '{ print $1}'`
-    if test -n "${svntag}"; then
-	SVN_TAG="${svntag}"
-	SVN_VERSION=`echo "${svntag}" | awk -F '-' '{print $NF}'`
-    else
-	svn_vers=`svnversion . | sed 's/[[0-9]]*://g'`
-	if test "${svn_vers}" = "Unversioned directory"; then
-	    SVN_VERSION="0.0.0"
-	else
-	    SVN_VERSION="0.0.${svn_vers}"
-	fi
-	SVN_TAG="$1-${SVN_VERSION}"
-    fi
-}
-
 DwmGetTag() {
     DwmGetGitTag $1
     if test -n "${GIT_TAG}"; then
 	DWM_TAG="${GIT_TAG}"
 	DWM_VERSION="${GIT_VERSION}"
-    else
-	DwmGetSvnTag $1
-	if test -n "${SVN_TAG}" ; then
-	    DWM_TAG="${SVN_TAG}"
-	    DWM_VERSION="${SVN_VERSION}"
-	fi
     fi
     if test -z "${DWM_TAG}" ; then
 	DWM_TAG="$1-0.0.0"

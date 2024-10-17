@@ -466,12 +466,6 @@ define(DWM_GET_TAG,[
   if test -n "${GIT_TAG}" ; then
     DWM_TAG="${GIT_TAG}"
     DWM_VERSION="${GIT_VERSION}"
-  else
-    DWM_SVN_TAG([$1])
-    if test -n "${SVN_TAG}" ; then
-      DWM_TAG="${SVN_TAG}"
-      DWM_VERSION="${SVN_VERSION}"
-    fi
   fi
   if test -z "${DWM_TAG}" ; then
     DWM_TAG="[$1]-0.0.0"

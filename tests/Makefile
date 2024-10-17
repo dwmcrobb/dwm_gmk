@@ -3,7 +3,7 @@ $(call dwm_gmk_init)
 
 include ../Makefile.vars
 
-tests:: test_relpath test_dirfiles test_uniqsort
+tests:: test_relpath test_dirfiles test_uniqsort test_quiet
 
 test_relpath::
 	@[ $(dwm_relpath ../src,$(dwm_thisdir )) = ../tests ] || echo "failed" && exit
@@ -28,6 +28,9 @@ test_uniqsort::
 	@[ "$(dwm_uniqsort a b a b a b c a b c d)" = "a b c d" ] || exit
 	@[ "$(dwm_uniqsort d c b a c b a b a b a)" = "a b c d" ] || exit
 	@echo uniqsort tests passed
+
+test_quiet::
+	$(dwm_quiet listing /,ls /)
 
 # $(info thisdir $(dwm_thisdir ))
 # $(info relpath thisdir ../src: $(dwm_relpath $(dwm_thisdir),../src))

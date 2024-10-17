@@ -1,11 +1,15 @@
 include ../Makefile.vars
 
+$(info PWD $(PWD))
+
 INCS           = -I../include -I/opt/local/include -I/usr/local/include
 LTINSTALL     := ${LIBTOOL} --mode=install ../install-sh
 LTUNINSTALL   := ${LIBTOOL} --quiet --mode=uninstall rm -f
 OBJFILESNP     = dwm_gmk_dirfiles.lo \
                  dwm_gmk_init.lo \
+                 dwm_gmk_quiet.lo \
                  dwm_gmk_relpath.lo \
+                 dwm_gmk_relpwd.lo \
                  dwm_gmk_setup.lo \
                  dwm_gmk_thisdir.lo \
                  dwm_gmk_uniqsort.lo \

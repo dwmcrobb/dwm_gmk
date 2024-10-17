@@ -1,6 +1,7 @@
 #include "dwm_gmk.h"
 
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <iostream>
 #include <string>
@@ -30,6 +31,7 @@ char *dwm_gmk_quiet(const char *name, unsigned int argc, char *argv[])
       int procexit = pclose(p);
       if (procexit) {
         cerr << argv[1] << '\n' << outstring;
+        exit(1);
       }
     }
   }

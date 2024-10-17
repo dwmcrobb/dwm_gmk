@@ -1,6 +1,6 @@
 include ../Makefile.vars
 
-INCS           = -I../include -I/opt/local/include
+INCS           = -I../include -I/opt/local/include -I/usr/local/include
 LTINSTALL     := ${LIBTOOL} --mode=install ../install-sh
 LTUNINSTALL   := ${LIBTOOL} --quiet --mode=uninstall rm -f
 OBJFILESNP     = dwm_gmk_dirfiles.lo \

@@ -8,4 +8,5 @@ extern "C" {
     char *dwm_gmk_dirfiles(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_relpath(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_thisdir(const char *name, unsigned int argc, char *argv[]);
+    char *dwm_gmk_uniqsort(const char *name, unsigned int argc, char *argv[]);
 }

@@ -1,9 +1,9 @@
-load ../lib/.libs/libdwm_gmk.so(dwm_gmk_setup)
+load ../lib/.libs/dwm_gmk.so(dwm_gmk_setup)
 $(call dwm_gmk_init)
 
 include ../Makefile.vars
 
-tests:: test_relpath test_dirfiles
+tests:: test_relpath test_dirfiles test_uniqsort
 
 test_relpath::
 	@[ $(dwm_relpath ../src,$(dwm_thisdir )) = ../tests ] || echo "failed" && exit
@@ -21,8 +21,13 @@ test_dirfiles::
 	@[ -n "$(dwm_dirfiles ../src,.+\.cc)" ] || exit
 	@[ -z "$(dwm_dirfiles .,Make\.ile)" ] || exit
 	@[ "$(dwm_dirfiles .,Make.ile)" = Makefile ] || exit
-	@[ $(words $(dwm_dirfiles ../src,.+\.cc)) -ge 4 ] || exit
+	@[ $(words $(dwm_dirfiles ../src,.+\.cc)) -ge 7 ] || exit
 	@echo dirfiles tests passed
+
+test_uniqsort::
+	@[ "$(dwm_uniqsort a b a b a b c a b c d)" = "a b c d" ] || exit
+	@[ "$(dwm_uniqsort d c b a c b a b a b a)" = "a b c d" ] || exit
+	@echo uniqsort tests passed
 
 # $(info thisdir $(dwm_thisdir ))
 # $(info relpath thisdir ../src: $(dwm_relpath $(dwm_thisdir),../src))

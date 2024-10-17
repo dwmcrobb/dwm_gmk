@@ -1,5 +1,6 @@
 *~
 *.deb
+*.pkg
 Makefile.vars
 autom4te.cache/**
 config.log

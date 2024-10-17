@@ -7,7 +7,9 @@ OBJFILESNP     = dwm_gmk_dirfiles.lo \
                  dwm_gmk_init.lo \
                  dwm_gmk_relpath.lo \
                  dwm_gmk_setup.lo \
-                 dwm_gmk_thisdir.lo
+                 dwm_gmk_thisdir.lo \
+                 dwm_gmk_uniqsort.lo \
+                 DwmGmkUtils.lo
 OBJFILES       = $(OBJFILESNP:%.lo=../obj/%.lo)
 shlib_version  = $(shell ../getvers.sh -s)
 

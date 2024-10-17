@@ -12,8 +12,9 @@ test_relpath::
 	@[ $(dwm_relpath ..,$(dwm_thisdir )) = tests ] || exit
 	@[ $(dwm_relpath $(dwm_thisdir ),$(dwm_thisdir )) = . ] || exit
 	@[ $(dwm_relpath $(dwm_thisdir ),../src) = ../src ] || exit
-	@[ /$(dwm_relpath /,$(dwm_thisdir )) = `pwd` ] || exit
+	@[ "/$(dwm_relpath /,$(dwm_thisdir ))" = $(shell pwd) ] || exit
 	@echo relpath tests passed
+
 
 test_dirfiles::
 	@[ $(dwm_dirfiles .,Makefile) = Makefile ] || exit

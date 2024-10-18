@@ -26,7 +26,6 @@
 
 #include <cstring>
 #include <filesystem>
-#include <iostream>
 #include <string>
 
 #include "DwmGmkUtils.hh"
@@ -52,9 +51,6 @@ char *dwm_gmk_totop(const char *name, unsigned int argc, char *argv[])
     if (Dwm::Gmk::IsFile(fromPath)) {
       fromPath = fs::path(fromPath).parent_path();
     }
-    std::cerr << "fs::proximate(" << g_dwm_gmk_topdir_abs << ','
-              << fromPath << ")\n";
-    
     std::string  relPath = fs::proximate(g_dwm_gmk_topdir_abs,fromPath);
     if (! relPath.empty()) {
       rel = gmk_alloc(relPath.size() + 1);

@@ -6,6 +6,7 @@ INCS           = -I../include -I/opt/local/include -I/usr/local/include
 LTINSTALL     := ${LIBTOOL} --mode=install ../install-sh
 LTUNINSTALL   := ${LIBTOOL} --quiet --mode=uninstall rm -f
 OBJFILESNP     = dwm_gmk_bison.lo \
+                 dwm_gmk_curpath.lo \
                  dwm_gmk_dirfiles.lo \
                  dwm_gmk_flex.lo \
                  dwm_gmk_fromtop.lo \

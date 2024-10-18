@@ -17,9 +17,9 @@
 //===========================================================================
 
 //---------------------------------------------------------------------------
-//!  \file dwm_gmk_thisdir.cc
+//!  \file dwm_gmk_curpath.cc
 //!  \author Daniel W. McRobb
-//!  \brief dwm_gmk_thisdir GNU make extension function
+//!  \brief dwm_gmk_curpath GNU make extension function
 //---------------------------------------------------------------------------
 
 extern "C" {
@@ -33,21 +33,20 @@ extern "C" {
 #include <filesystem>
 #include <string>
 
-extern std::string  g_dwm_gmk_thisdir;
-
 namespace fs = std::filesystem;
 
 //----------------------------------------------------------------------------
 //!  
 //----------------------------------------------------------------------------
-char *dwm_gmk_thisdir(const char *name, unsigned int argc, char *argv[])
+char *dwm_gmk_curpath(const char *name, unsigned int argc, char *argv[])
 {
   char  *rc = 0;
-  if (! g_dwm_gmk_thisdir.empty()) {
-    rc = gmk_alloc(g_dwm_gmk_thisdir.size() + 1);
+  std::string  curPath = fs::current_path();
+  if (! curPath.empty()) {
+    rc = gmk_alloc(curPath.size() + 1);
     if (rc) {
-      rc[g_dwm_gmk_thisdir.size()] = 0;
-      strncpy(rc, g_dwm_gmk_thisdir.c_str(), g_dwm_gmk_thisdir.size());
+      rc[curPath.size()] = 0;
+      strncpy(rc, curPath.c_str(), curPath.size());
     }
   }
   return rc;

@@ -30,7 +30,6 @@ extern "C" {
 #include "dwm_gmk.h"
 
 #include <filesystem>
-#include <iostream>
 #include <string>
 
 std::string  g_dwm_gmk_thisdir;
@@ -71,7 +70,5 @@ char *dwm_gmk_init(const char *name, unsigned int argc, char *argv[])
   if (rc) {
     gmk_free(rc);
   }
-  std::cerr << "g_dwm_gmk_thisdir_abs: " << g_dwm_gmk_thisdir_abs << '\n'
-            << "g_dwm_gmk_pwd: " << g_dwm_gmk_pwd << '\n';
   return 0;
 }

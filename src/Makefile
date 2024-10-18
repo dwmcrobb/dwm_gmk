@@ -11,6 +11,7 @@ OBJFILESNP     = dwm_gmk_bison.lo \
                  dwm_gmk_flex.lo \
                  dwm_gmk_fromtop.lo \
                  dwm_gmk_init.lo \
+                 dwm_gmk_pwd.lo \
                  dwm_gmk_relpath.lo \
                  dwm_gmk_relpwd.lo \
                  dwm_gmk_settop.lo \

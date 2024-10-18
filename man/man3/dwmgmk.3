@@ -1,0 +1,31 @@
+.Dd Oct 17, 2024
+.Dt DWMGMK 3
+.Os
+.Sh NAME
+.Nm dwm_gmk_init,
+.Nm dwm_bison,
+.Nm dwm_dirfiles,
+.Nm dwm_flex,
+.Nm dwm_relpath,
+.Nm dwm_relpwd,
+.Nm dwm_thisdir,
+.Nm dwm_uniqsort
+.Nd GNU make extensions
+.Sh LIBRARY
+.Lb dwm_gmk.so
+.Sh SYNOPSIS
+.Ss dwm_gmk_init
+$(call dwm_gmk_init)
+.Ss dwm_bison
+.Dl $(dwm_bison bison_source_file)
+.Ss dwm_dirfiles
+.Dl $(dirfiles directory_path, regexp)
+.Ss dwm_flex
+.Dl $(dwm_flex flex_source_file)
+.Ss dwm_relpath
+.Dl $(dwm_relpath from,to)
+.Ss dwm_relpwd
+.Dl $(dwm_relpwd path)
+.Ss dwm_thisdir
+.Ss dwm_uniqsort
+.Dl $(dwm_uniqsort words)

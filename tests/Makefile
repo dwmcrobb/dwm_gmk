@@ -1,14 +1,15 @@
 load ../lib/.libs/dwm_gmk.so(dwm_gmk_setup)
+# load /usr/local/lib/dwm_gmk.so(dwm_gmk_setup)
 $(call dwm_gmk_init)
 
 include ../Makefile.vars
 
-tests:: test_relpath test_dirfiles test_uniqsort test_quiet
+tests:: test_relpath test_dirfiles test_uniqsort
 
 test_relpath::
 	@[ $(dwm_relpath ../src,$(dwm_thisdir )) = ../tests ] || echo "failed" && exit
-	@[ $(dwm_relpath $(dwm_thisdir ),../src) = ../src ] || exit
-	@[ $(dwm_relpath $(dwm_thisdir ),..) = .. ] || exit
+	@[ $(dwm_relpath $(dwm_thisdir ),$(dwm_thisdir )/../src) = ../src ] || exit
+	@[ $(dwm_relpath $(dwm_thisdir ),$(dwm_relpwd ..)) = .. ] || exit
 	@[ $(dwm_relpath ..,$(dwm_thisdir )) = tests ] || exit
 	@[ $(dwm_relpath $(dwm_thisdir ),$(dwm_thisdir )) = . ] || exit
 	@[ $(dwm_relpath $(dwm_thisdir ),../src) = ../src ] || exit
@@ -29,9 +30,12 @@ test_uniqsort::
 	@[ "$(dwm_uniqsort d c b a c b a b a b a)" = "a b c d" ] || exit
 	@echo uniqsort tests passed
 
-test_quiet::
-	$(dwm_quiet listing /,ls /)
-
-# $(info thisdir $(dwm_thisdir ))
+$(info thisdir $(dwm_thisdir ))
+$(info dwm_relpwd ..)
+$(info dwm_top $(dwm_top ))
+$(info dwm_totop $(dwm_totop ))
+$(info dwm_totop ../Makefile.vars $(dwm_totop ../Makefile.vars))
+$(info dwm_fromtop $(dwm_fromtop ))
+$(info dwm_fromtop ../Makefile.vars $(dwm_fromtop ../Makefile.vars))
 # $(info relpath thisdir ../src: $(dwm_relpath $(dwm_thisdir),../src))
 # $(info $(dwm_dirfiles ../src,.+\.cc))

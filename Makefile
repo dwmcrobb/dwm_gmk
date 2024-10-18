@@ -1,12 +1,17 @@
 include Makefile.vars
 
-all:: lib/dwm_gmk.la
+all:: lib/dwm_gmk.la apps
+
+apps::
+	${MAKE} -C apps
 
 lib/dwm_gmk.la::
 	${MAKE} -C src
+	${MAKE} -C tests
 
 tarprep:: lib/dwm_gmk.la
 	${MAKE} -C src $@
+	${MAKE} -C apps $@
 	${MAKE} -C packaging $@
 
 package: ${OSNAME}-pkg
@@ -26,9 +31,11 @@ linux-pkg: tarprep
 
 clean::
 	${MAKE} -C src $@
+	${MAKE} -C apps $@
 
 distclean:: clean
 	${MAKE} -C src $@
+	${MAKE} -C apps $@
 	${MAKE} -C packaging $@
 	rm -Rf autom4te.cache staging
 	rm -f config.log config.status Makefile.vars

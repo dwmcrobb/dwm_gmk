@@ -22,27 +22,20 @@
 //!  \brief dwm_gmk_bison GNU make extension function
 //---------------------------------------------------------------------------
 
-extern "C" {
-  #include <sys/param.h>
-  #include <unistd.h>
-}
-  
 #include "dwm_gmk.h"
 
 #include <filesystem>
 #include <iostream>
 #include <string>
 
-std::string  g_dwm_gmk_thisdir;
-std::string  g_dwm_gmk_thisdir_abs;
-std::string  g_dwm_gmk_pwd;
+std::string  g_dwm_gmk_topdir_abs;
 
 namespace fs = std::filesystem;
 
 //----------------------------------------------------------------------------
 //!  
 //----------------------------------------------------------------------------
-char *dwm_gmk_init(const char *name, unsigned int argc, char *argv[])
+char *dwm_gmk_settop(const char *name, unsigned int argc, char *argv[])
 {
   char  *rc = 0;
   char  *mkfileList = gmk_expand("$(MAKEFILE_LIST)");
@@ -56,22 +49,26 @@ char *dwm_gmk_init(const char *name, unsigned int argc, char *argv[])
     else {
       mkfile = fs::weakly_canonical(s.substr(idx+1));
     }
-    g_dwm_gmk_thisdir_abs = mkfile.parent_path();
-    char  cwd[PATH_MAX];
-    if (getcwd(cwd, sizeof(cwd))) {
-      g_dwm_gmk_pwd = cwd;
-      fs::path  mkfileDir = mkfile.parent_path();
-      std::string  mkfileDirStr = mkfileDir.string();
-      char *paths[2] = { cwd, mkfileDirStr.data() };
-      rc = dwm_gmk_relpath("dwm_relpath", 2, paths);
-      g_dwm_gmk_thisdir = rc;
-    }
+    g_dwm_gmk_topdir_abs = mkfile.parent_path();
     gmk_free(mkfileList);
   }
   if (rc) {
     gmk_free(rc);
   }
-  std::cerr << "g_dwm_gmk_thisdir_abs: " << g_dwm_gmk_thisdir_abs << '\n'
-            << "g_dwm_gmk_pwd: " << g_dwm_gmk_pwd << '\n';
   return 0;
+}
+
+//----------------------------------------------------------------------------
+//!  
+//----------------------------------------------------------------------------
+char *dwm_gmk_top(const char *name, unsigned int argc, char *argv[])         
+{
+  char  *top = 0;
+  if (! g_dwm_gmk_topdir_abs.empty()) {
+    top = gmk_alloc(g_dwm_gmk_topdir_abs.size() + 1);
+    if (top) {
+      strncpy(top, g_dwm_gmk_topdir_abs.c_str(), g_dwm_gmk_topdir_abs.size());
+    }
+  }
+  return top;
 }

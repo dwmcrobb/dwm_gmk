@@ -17,61 +17,42 @@
 //===========================================================================
 
 //---------------------------------------------------------------------------
-//!  \file dwm_gmk_init.cc
+//!  \file dwm_gmk_totop.cc
 //!  \author Daniel W. McRobb
-//!  \brief dwm_gmk_bison GNU make extension function
+//!  \brief dwm_gmk_fromtop GNU make extension function
 //---------------------------------------------------------------------------
 
-extern "C" {
-  #include <sys/param.h>
-  #include <unistd.h>
-}
-  
 #include "dwm_gmk.h"
 
+#include <cstring>
 #include <filesystem>
 #include <iostream>
 #include <string>
 
-std::string  g_dwm_gmk_thisdir;
-std::string  g_dwm_gmk_thisdir_abs;
-std::string  g_dwm_gmk_pwd;
+extern std::string  g_dwm_gmk_thisdir_abs;
+extern std::string  g_dwm_gmk_topdir_abs;
 
 namespace fs = std::filesystem;
 
 //----------------------------------------------------------------------------
 //!  
 //----------------------------------------------------------------------------
-char *dwm_gmk_init(const char *name, unsigned int argc, char *argv[])
+char *dwm_gmk_fromtop(const char *name, unsigned int argc, char *argv[])
 {
-  char  *rc = 0;
-  char  *mkfileList = gmk_expand("$(MAKEFILE_LIST)");
-  if (mkfileList) {
-    std::string  s(mkfileList);
-    fs::path  mkfile;
-    size_t  idx = s.find_last_of(' ');
-    if (idx == std::string::npos) {
-      mkfile = fs::weakly_canonical(s);
+  char  *rel = 0;
+  if ((! g_dwm_gmk_topdir_abs.empty()) && (! g_dwm_gmk_thisdir_abs.empty())) {
+    std::string  toPath = g_dwm_gmk_thisdir_abs;
+    if (argc == 1) {
+      toPath += '/';
+      toPath += argv[0];
     }
-    else {
-      mkfile = fs::weakly_canonical(s.substr(idx+1));
+    std::string  relPath = fs::relative(toPath, g_dwm_gmk_topdir_abs);
+    if (! relPath.empty()) {
+      rel = gmk_alloc(relPath.size() + 1);
+      if (rel) {
+        strncpy(rel, relPath.c_str(), relPath.size());
+      }
     }
-    g_dwm_gmk_thisdir_abs = mkfile.parent_path();
-    char  cwd[PATH_MAX];
-    if (getcwd(cwd, sizeof(cwd))) {
-      g_dwm_gmk_pwd = cwd;
-      fs::path  mkfileDir = mkfile.parent_path();
-      std::string  mkfileDirStr = mkfileDir.string();
-      char *paths[2] = { cwd, mkfileDirStr.data() };
-      rc = dwm_gmk_relpath("dwm_relpath", 2, paths);
-      g_dwm_gmk_thisdir = rc;
-    }
-    gmk_free(mkfileList);
   }
-  if (rc) {
-    gmk_free(rc);
-  }
-  std::cerr << "g_dwm_gmk_thisdir_abs: " << g_dwm_gmk_thisdir_abs << '\n'
-            << "g_dwm_gmk_pwd: " << g_dwm_gmk_pwd << '\n';
-  return 0;
+  return rel;
 }

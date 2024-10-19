@@ -6,7 +6,7 @@ include $(dwm_thisdir )/../Makefile.vars
 
 tests:: test_relpath test_dirfiles test_uniqsort test_subdirs test_rgxmatch \
         test_rgxsearch test_rgxreplace test_rgxsubst test_bison1 test_bison2 \
-	test_bison3
+	test_bison3 test_flex1 test_flex2
 
 test_relpath::
 	@[ $(dwm_relpath $(dwm_thisdir )/../src,$(dwm_thisdir )) = ../tests ] || exit
@@ -132,3 +132,35 @@ test_bison3::
 	@[ "$(word 11,$(bison_rule3))" = "-o" ] || exit
 	@[ "$(word 12,$(bison_rule3))" = "parser.c" ] || exit
 	@[ "$(word 13,$(bison_rule3))" = "$$<" ] || exit
+
+flex_rule1 = $(dwm_flex lexer.lex,-o lexer.cc)
+
+test_flex1::
+	@[ $(words $(flex_rule1)) -eq 9 ] || exit
+	@[ "$(word 1,$(flex_rule1))" = "FLEXTARGETS" ] || exit
+	@[ "$(word 2,$(flex_rule1))" = "+=" ] || exit
+	@[ "$(word 3,$(flex_rule1))" = "lexer.cc" ] || exit
+	@[ "$(word 4,$(flex_rule1))" = "lexer.cc:" ] || exit
+	@[ "$(word 5,$(flex_rule1))" = "lexer.lex" ] || exit
+	@[ "$(word 6,$(flex_rule1))" = "flex" ] || exit
+	@[ "$(word 7,$(flex_rule1))" = "-o" ] || exit
+	@[ "$(word 8,$(flex_rule1))" = "lexer.cc" ] || exit
+	@[ "$(word 9,$(flex_rule1))" = "$$<" ] || exit
+
+flex_rule2 = $(dwm_flex lexer.lex,-o lexer.cc,-d,--tables-file=lexertables)
+
+test_flex2::
+	@[ $(words $(flex_rule2)) -eq 13 ] || exit
+	@[ "$(word 1,$(flex_rule2))" = "FLEXTARGETS" ] || exit
+	@[ "$(word 2,$(flex_rule2))" = "+=" ] || exit
+	@[ "$(word 3,$(flex_rule2))" = "lexer.cc" ] || exit
+	@[ "$(word 4,$(flex_rule2))" = "lexertables" ] || exit
+	@[ "$(word 5,$(flex_rule2))" = "lexer.cc" ] || exit
+	@[ "$(word 6,$(flex_rule2))" = "lexertables:" ] || exit
+	@[ "$(word 7,$(flex_rule2))" = "lexer.lex" ] || exit
+	@[ "$(word 8,$(flex_rule2))" = "flex" ] || exit
+	@[ "$(word 9,$(flex_rule2))" = "-d" ] || exit
+	@[ "$(word 10,$(flex_rule2))" = "-o" ] || exit
+	@[ "$(word 11,$(flex_rule2))" = "lexer.cc" ] || exit
+	@[ "$(word 12,$(flex_rule2))" = "--tables-file=lexertables" ] || exit
+	@[ "$(word 13,$(flex_rule2))" = "$$<" ] || exit

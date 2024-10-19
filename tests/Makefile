@@ -5,7 +5,8 @@ $(call dwm_gmk_init)
 include $(dwm_thisdir )/../Makefile.vars
 
 tests:: test_relpath test_dirfiles test_uniqsort test_subdirs test_rgxmatch \
-        test_rgxsearch test_rgxreplace test_rgxsubst
+        test_rgxsearch test_rgxreplace test_rgxsubst test_bison1 test_bison2 \
+	test_bison3
 
 test_relpath::
 	@[ $(dwm_relpath $(dwm_thisdir )/../src,$(dwm_thisdir )) = ../tests ] || exit
@@ -68,6 +69,66 @@ test_rgxsubst::
 	  = "a_b.o c_d.o e_f.o" ] || exit
 	@[ "$(dwm_rgxsubst ^Test(.+)\.o,Test$$1,Test1.o Test2.o Test3.o)" \
 	  = "Test1 Test2 Test3" ] || exit
+	@[ "$(dwm_rgxsubst (^.+)\.y$$,$$1.cc $$1.hh,Parser1.y)" \
+	  = "Parser1.cc Parser1.hh" ] || exit
 	@echo rgxsubst tests passed
 
+bison_rule1 = $(dwm_bison parser.y,-t,-d,-o myparser.cc,-g parser.graph)
 
+test_bison1::
+	@[ $(words $(bison_rule1)) -eq 18 ] || exit
+	@[ "$(word 1,$(bison_rule1))" = "BISONTARGETS" ] || exit
+	@[ "$(word 2,$(bison_rule1))" = "+=" ] || exit
+	@[ "$(word 3,$(bison_rule1))" = "parser.graph" ] || exit
+	@[ "$(word 4,$(bison_rule1))" = "myparser.cc" ] || exit
+	@[ "$(word 5,$(bison_rule1))" = "myparser.hh" ] || exit
+	@[ "$(word 6,$(bison_rule1))" = "parser.graph" ] || exit
+	@[ "$(word 7,$(bison_rule1))" = "myparser.cc" ] || exit
+	@[ "$(word 8,$(bison_rule1))" = "myparser.hh" ] || exit
+	@[ "$(word 9,$(bison_rule1))" = "&:" ] || exit
+	@[ "$(word 10,$(bison_rule1))" = "parser.y" ] || exit
+	@[ "$(word 11,$(bison_rule1))" = "bison" ] || exit
+	@[ "$(word 12,$(bison_rule1))" = "-d" ] || exit
+	@[ "$(word 13,$(bison_rule1))" = "-t" ] || exit
+	@[ "$(word 14,$(bison_rule1))" = "-g" ] || exit
+	@[ "$(word 15,$(bison_rule1))" = "parser.graph" ] || exit
+	@[ "$(word 16,$(bison_rule1))" = "-o" ] || exit
+	@[ "$(word 17,$(bison_rule1))" = "myparser.cc" ] || exit
+	@[ "$(word 18,$(bison_rule1))" = "$$<" ] || exit
+	@echo bison1 tests passed
+
+bison_rule2 = $(dwm_bison parser.y,-d)
+
+test_bison2::
+	@[ $(words $(bison_rule2)) -eq 13 ] || exit
+	@[ "$(word 1,$(bison_rule2))" = "BISONTARGETS" ] || exit
+	@[ "$(word 2,$(bison_rule2))" = "+=" ] || exit
+	@[ "$(word 3,$(bison_rule2))" = "parser.cc" ] || exit
+	@[ "$(word 4,$(bison_rule2))" = "parser.hh" ] || exit
+	@[ "$(word 5,$(bison_rule2))" = "parser.cc" ] || exit
+	@[ "$(word 6,$(bison_rule2))" = "parser.hh" ] || exit
+	@[ "$(word 7,$(bison_rule2))" = "&:" ] || exit
+	@[ "$(word 8,$(bison_rule2))" = "parser.y" ] || exit
+	@[ "$(word 9,$(bison_rule2))" = "bison" ] || exit
+	@[ "$(word 10,$(bison_rule2))" = "-d" ] || exit
+	@[ "$(word 11,$(bison_rule2))" = "-o" ] || exit
+	@[ "$(word 12,$(bison_rule2))" = "parser.cc" ] || exit
+	@[ "$(word 13,$(bison_rule2))" = "$$<" ] || exit
+
+bison_rule3 = $(dwm_bison parser.y,-d,-o parser.c)
+
+test_bison3::
+	@[ $(words $(bison_rule3)) -eq 13 ] || exit
+	@[ "$(word 1,$(bison_rule3))" = "BISONTARGETS" ] || exit
+	@[ "$(word 2,$(bison_rule3))" = "+=" ] || exit
+	@[ "$(word 3,$(bison_rule3))" = "parser.c" ] || exit
+	@[ "$(word 4,$(bison_rule3))" = "parser.h" ] || exit
+	@[ "$(word 5,$(bison_rule3))" = "parser.c" ] || exit
+	@[ "$(word 6,$(bison_rule3))" = "parser.h" ] || exit
+	@[ "$(word 7,$(bison_rule3))" = "&:" ] || exit
+	@[ "$(word 8,$(bison_rule3))" = "parser.y" ] || exit
+	@[ "$(word 9,$(bison_rule3))" = "bison" ] || exit
+	@[ "$(word 10,$(bison_rule3))" = "-d" ] || exit
+	@[ "$(word 11,$(bison_rule3))" = "-o" ] || exit
+	@[ "$(word 12,$(bison_rule3))" = "parser.c" ] || exit
+	@[ "$(word 13,$(bison_rule3))" = "$$<" ] || exit

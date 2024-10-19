@@ -35,7 +35,7 @@ int dwm_gmk_setup(const gmk_floc *floc)
 {
     gmk_add_function("dwm_gmk_init", dwm_gmk_init, 0, 0, 0);
 
-    gmk_add_function("dwm_bison",       dwm_gmk_bison, 1, 1, 0);
+    gmk_add_function("dwm_bison",       dwm_gmk_bison, 1, 0, 0);
     gmk_add_function("dwm_curpath",     dwm_gmk_curpath, 0, 0, 0);
     gmk_add_function("dwm_cwd",         dwm_gmk_curpath, 0, 0, 0);
     gmk_add_function("dwm_dirfiles",    dwm_gmk_dirfiles, 0, 2, 0);

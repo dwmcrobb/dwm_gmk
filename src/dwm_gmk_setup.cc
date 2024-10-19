@@ -38,13 +38,14 @@ int dwm_gmk_setup(const gmk_floc *floc)
     gmk_add_function("dwm_bison",    dwm_gmk_bison, 1, 1, 0);
     gmk_add_function("dwm_curpath",  dwm_gmk_curpath, 0, 0, 0);
     gmk_add_function("dwm_cwd",      dwm_gmk_curpath, 0, 0, 0);
-    gmk_add_function("dwm_dirfiles", dwm_gmk_dirfiles, 2, 2, 0);
+    gmk_add_function("dwm_dirfiles", dwm_gmk_dirfiles, 0, 2, 0);
     gmk_add_function("dwm_flex",     dwm_gmk_flex, 1, 1, 0);
     gmk_add_function("dwm_fromtop",  dwm_gmk_fromtop, 0, 1, 0);
     gmk_add_function("dwm_pwd",      dwm_gmk_pwd, 0, 0, 0);
     gmk_add_function("dwm_relpath",  dwm_gmk_relpath, 2, 2, 0);
     gmk_add_function("dwm_relpwd",   dwm_gmk_relpwd, 1, 1, 0);
     gmk_add_function("dwm_settop",   dwm_gmk_settop, 0, 1, 0);
+    gmk_add_function("dwm_subdirs",  dwm_gmk_subdirs, 0, 2, 0);
     gmk_add_function("dwm_thisdir",  dwm_gmk_thisdir, 0, 0, 0);
     gmk_add_function("dwm_top",      dwm_gmk_top, 0, 0, 0);
     gmk_add_function("dwm_totop",    dwm_gmk_totop, 0, 1, 0);

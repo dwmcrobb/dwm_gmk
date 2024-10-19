@@ -15,6 +15,7 @@ OBJFILESNP     = dwm_gmk_bison.lo \
                  dwm_gmk_relpath.lo \
                  dwm_gmk_relpwd.lo \
                  dwm_gmk_settop.lo \
+                 dwm_gmk_subdirs.lo \
                  dwm_gmk_totop.lo \
                  dwm_gmk_setup.lo \
                  dwm_gmk_thisdir.lo \

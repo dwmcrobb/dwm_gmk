@@ -17,16 +17,11 @@
 //===========================================================================
 
 //---------------------------------------------------------------------------
-//!  \file dwm_gmk_dirfiles.cc
+//!  \file dwm_gmk_subdirs.cc
 //!  \author Daniel W. McRobb
-//!  \brief dwm_gmk_dirfiles GNU make extension function
+//!  \brief dwm_gmk_subdirs GNU make extension function
 //---------------------------------------------------------------------------
 
-extern "C" {
-  #include <sys/param.h>
-  #include <unistd.h>
-}
-  
 #include <cstring>
 #include <filesystem>
 #include <regex>
@@ -40,7 +35,7 @@ namespace fs = std::filesystem;
 //----------------------------------------------------------------------------
 //!  
 //----------------------------------------------------------------------------
-char *dwm_gmk_dirfiles(const char *name, unsigned int argc, char *argv[])
+char *dwm_gmk_subdirs(const char *name, unsigned int argc, char *argv[])
 {
   namespace  rgxflags = std::regex_constants;
   
@@ -63,14 +58,14 @@ char *dwm_gmk_dirfiles(const char *name, unsigned int argc, char *argv[])
 
   std::regex   rgx(rgxstr, rgxflags::ECMAScript|rgxflags::optimize);
   std::smatch  sm;
-  std::string  filesstr;
+  std::string  dirsstr;
 
   try {
     for (auto const & dirEntry : fs::directory_iterator{dirPath}) {
-      if (Dwm::Gmk::IsFile(dirEntry.path())) {
-        std::string  fileName = dirEntry.path().filename().string();
-        if (regex_match(fileName, sm, rgx)) {
-          filesstr += fileName + ' ';
+      if (dirEntry.is_directory()) {
+        std::string  dirName = dirEntry.path().filename().string();
+        if (regex_match(dirName, sm, rgx)) {
+          dirsstr += dirName + ' ';
         }
       }
     }
@@ -78,11 +73,11 @@ char *dwm_gmk_dirfiles(const char *name, unsigned int argc, char *argv[])
   catch (...) {
   }
   
-  if (! filesstr.empty()) {
-    rc = gmk_alloc(filesstr.size());
-    rc[filesstr.size() - 1] = '\0';
+  if (! dirsstr.empty()) {
+    rc = gmk_alloc(dirsstr.size());
+    rc[dirsstr.size() - 1] = '\0';
     if (rc) {
-      strncpy(rc, filesstr.c_str(), filesstr.size() - 1);
+      strncpy(rc, dirsstr.c_str(), dirsstr.size() - 1);
     }
   }
   return rc;

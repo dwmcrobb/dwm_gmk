@@ -7,7 +7,9 @@ apps::
 
 lib/dwm_gmk.la::
 	${MAKE} -C src
-	${MAKE} -C tests
+
+tests::
+	${MAKE} -s -C tests
 
 tarprep:: lib/dwm_gmk.la
 	${MAKE} -C src $@

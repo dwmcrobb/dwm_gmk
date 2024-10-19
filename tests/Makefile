@@ -4,7 +4,7 @@ $(call dwm_gmk_init)
 
 include $(dwm_thisdir )/../Makefile.vars
 
-tests:: test_relpath test_dirfiles test_uniqsort test_subdirs
+tests:: test_relpath test_dirfiles test_uniqsort test_subdirs test_rgxmatch
 
 test_relpath::
 	@[ $(dwm_relpath $(dwm_thisdir )/../src,$(dwm_thisdir )) = ../tests ] || echo "failed" && exit
@@ -25,6 +25,11 @@ test_dirfiles::
 	@[ $(words $(dwm_dirfiles $(dwm_thisdir )/../src,.+\.cc)) -ge 7 ] || exit
 	@echo dirfiles tests passed
 
+test_uniqsort::
+	@[ "$(dwm_uniqsort a b a b a b c a b c d)" = "a b c d" ] || exit
+	@[ "$(dwm_uniqsort d c b a c b a b a b a)" = "a b c d" ] || exit
+	@echo uniqsort tests passed
+
 test_subdirs::
 	@[ "$(dwm_subdirs )" = "" ] || exit
 	@[ $(words $(dwm_subdirs $(dwm_thisdir )/..)) -ge 5 ] || exit
@@ -32,8 +37,11 @@ test_subdirs::
 	@[ "$(dwm_subdirs $(dwm_thisdir )/..,tests)" = tests ] || exit
 	@[ "$(dwm_subdirs $(dwm_thisdir )/..,src)" = src ] || exit
 
-test_uniqsort::
-	@[ "$(dwm_uniqsort a b a b a b c a b c d)" = "a b c d" ] || exit
-	@[ "$(dwm_uniqsort d c b a c b a b a b a)" = "a b c d" ] || exit
-	@echo uniqsort tests passed
+test_rgxmatch::
+	@[ "$(dwm_rgxmatch dwm,^d.+)" = "dwm" ] || exit
+	@[ "$(dwm_rgxmatch dwm,^d(.+))" = "dwm wm" ] || exit
+	@[ "$(dwm_rgxmatch dwm,.wm$$)" = "dwm" ] || exit
 
+$(info $(dwm_rgxmatch dwm,^d.+))
+$(info $(dwm_rgxmatch dwm,^d(.+)))
+$(info $(dwm_rgxmatch dwm,.wm$$))

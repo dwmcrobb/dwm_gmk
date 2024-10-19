@@ -38,6 +38,7 @@ extern "C" {
     char *dwm_gmk_pwd(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_relpath(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_relpwd(const char *name, unsigned int argc, char *argv[]);
+    char *dwm_gmk_rgxmatch(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_settop(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_subdirs(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_thisdir(const char *name, unsigned int argc, char *argv[]);

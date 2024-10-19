@@ -19,7 +19,7 @@
 //---------------------------------------------------------------------------
 //!  \file dwm_gmk_flex.cc
 //!  \author Daniel W. McRobb
-//!  \brief dwm_gmk_bison GNU make extension function
+//!  \brief dwm_gmk_flex GNU make extension function
 //---------------------------------------------------------------------------
 
 #include <iostream>

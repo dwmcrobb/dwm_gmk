@@ -19,7 +19,7 @@
 //---------------------------------------------------------------------------
 //!  \file dwm_gmk_init.cc
 //!  \author Daniel W. McRobb
-//!  \brief dwm_gmk_bison GNU make extension function
+//!  \brief dwm_gmk_init GNU make extension function
 //---------------------------------------------------------------------------
 
 extern "C" {

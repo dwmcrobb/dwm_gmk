@@ -19,7 +19,7 @@
 //---------------------------------------------------------------------------
 //!  \file dwm_gmk_setup.cc
 //!  \author Daniel W. McRobb
-//!  \brief dwm_gmk_bison GNU make extension function
+//!  \brief dwm_gmk_setup GNU make extension function
 //---------------------------------------------------------------------------
 
 #include "dwm_gmk.h"

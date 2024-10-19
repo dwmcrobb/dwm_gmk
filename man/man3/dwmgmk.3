@@ -5,12 +5,17 @@
 .Nm dwm_gmk_init,
 .Nm dwm_bison,
 .Nm dwm_curpath,
+.Nm dwm_cwd,
 .Nm dwm_dirfiles,
 .Nm dwm_flex,
 .Nm dwm_fromtop,
 .Nm dwm_pwd,
 .Nm dwm_relpath,
 .Nm dwm_relpwd,
+.Nm dwm_rgxmatch,
+.Nm dwm_rgxreplace,
+.Nm dwm_rgxsearch,
+.Nm dwm_rgxsubst,
 .Nm dwm_settop,
 .Nm dwm_subdirs,
 .Nm dwm_thisdir,
@@ -27,13 +32,17 @@ load /usr/local/lib/dwm_gmk.so(dwm_gmk_setup)
 $(call dwm_gmk_init)
 $(dwm_bison bison_source_file)
 $(dwm_curpath )
+$(dwm_cwd )
 $(dwm_dirfiles directory_path,regexp)
-$(dwm_flex flex_source_file)
 $(dwm_flex flex_source_file)
 $(dwm_fromtop\ )                                                     
 $(dwm_fromtop path)
 $(dwm_pwd\ )
 $(dwm_relpath from,to)
+$(dwm_rgxmatch\ string,regexp)
+$(dwm_rgxreplace\ string,regexp,format)
+$(dwm_rgxsearch\ string,regexp)
+$(dwm_rgxsubst\ regexp,format,text)
 $(dwm_settop\ )
 $(dwm_subdirs\ )
 $(dwm_thisdir\ )
@@ -93,6 +102,14 @@ invoked as 'make -C somedir ...'.
 .Dl Usage: $(dwm_pwd\ )
 .Ss dwm_relpath
 .Dl Usage: $(dwm_relpath from,to)
+.Ss dwm_rgxmatch
+.Dl Usage: $(dwm_rgxmatch\ string,regexp)
+.Ss dwm_rgxreplace
+.Dl Usage: $(dwm_rgxreplace\ string,regexp,format)
+.Ss dwm_rgxsearch
+.Dl Usage: $(dwm_rgxsearch\ string,regexp)
+.Ss dwm_rgxsubst
+.Dl Usage: $(dwm_rgxsubst\ regexp,format,text)
 .Ss dwm_relpwd
 .Dl Usage: $(dwm_relpwd path)
 .Ss dwm_settop

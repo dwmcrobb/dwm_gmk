@@ -4,10 +4,11 @@ $(call dwm_gmk_init)
 
 include $(dwm_thisdir )/../Makefile.vars
 
-tests:: test_relpath test_dirfiles test_uniqsort test_subdirs test_rgxmatch
+tests:: test_relpath test_dirfiles test_uniqsort test_subdirs test_rgxmatch \
+        test_rgxsearch test_rgxreplace test_rgxsubst
 
 test_relpath::
-	@[ $(dwm_relpath $(dwm_thisdir )/../src,$(dwm_thisdir )) = ../tests ] || echo "failed" && exit
+	@[ $(dwm_relpath $(dwm_thisdir )/../src,$(dwm_thisdir )) = ../tests ] || exit
 	@[ $(dwm_relpath $(dwm_thisdir ),$(dwm_thisdir )/../src) = ../src ] || exit
 	@[ $(dwm_relpath $(dwm_thisdir ),$(dwm_top )) = .. ] || exit
 	@[ $(dwm_relpath $(dwm_top ),$(dwm_thisdir )) = tests ] || exit
@@ -36,12 +37,37 @@ test_subdirs::
 	@[ $(words $(dwm_subdirs $(dwm_thisdir )/..,tests)) -eq 1 ] || exit
 	@[ "$(dwm_subdirs $(dwm_thisdir )/..,tests)" = tests ] || exit
 	@[ "$(dwm_subdirs $(dwm_thisdir )/..,src)" = src ] || exit
+	@echo subdirs tests passed
 
 test_rgxmatch::
 	@[ "$(dwm_rgxmatch dwm,^d.+)" = "dwm" ] || exit
 	@[ "$(dwm_rgxmatch dwm,^d(.+))" = "dwm wm" ] || exit
 	@[ "$(dwm_rgxmatch dwm,.wm$$)" = "dwm" ] || exit
+	@echo rgxmatch tests passed
 
-$(info $(dwm_rgxmatch dwm,^d.+))
-$(info $(dwm_rgxmatch dwm,^d(.+)))
-$(info $(dwm_rgxmatch dwm,.wm$$))
+test_rgxsearch::
+	@[ "$(dwm_rgxsearch dwm,d)" = "d" ] || exit
+	@[ "$(dwm_rgxsearch dwm,^d)" = "d" ] || exit
+	@[ "$(dwm_rgxsearch dwm,w)" = "w" ] || exit
+	@[ "$(dwm_rgxsearch dwm,m)" = "m" ] || exit
+	@[ "$(dwm_rgxsearch dwm,m$$)" = "m" ] || exit
+	@[ "$(dwm_rgxsearch dwm,t.+)" = "" ] || exit
+	@[ "$(dwm_rgxsearch dwm,(d).+)" = "dwm d" ] || exit
+	@echo rgxsearch tests passed
+
+test_rgxreplace::
+	@[ "$(dwm_rgxreplace Quick brown fox,a|e|i|o|u,[$$&])" = "Q[u][i]ck br[o]wn f[o]x" ] || exit
+	@[ "$(dwm_rgxreplace Quick brown fox, brown, [$$`])" = "Quick [Quick] fox" ] || exit
+	@[ "$(dwm_rgxreplace Quick brown fox,brown ,[$$'] )" = "Quick [fox] fox" ] || exit
+	@echo rgxreplace tests passed
+
+test_rgxsubst::
+	@[ "$(dwm_rgxsubst (.+)\.cc$$,$$1.o,foo.cc bar.cc foobar.cc)" \
+	  = "foo.o bar.o foobar.o" ] || exit
+	@[ "$(dwm_rgxsubst (.+)_(.+)\.cc,$$1_$$2.o,a_b.cc c_d.cc e_f.cc)" \
+	  = "a_b.o c_d.o e_f.o" ] || exit
+	@[ "$(dwm_rgxsubst ^Test(.+)\.o,Test$$1,Test1.o Test2.o Test3.o)" \
+	  = "Test1 Test2 Test3" ] || exit
+	@echo rgxsubst tests passed
+
+

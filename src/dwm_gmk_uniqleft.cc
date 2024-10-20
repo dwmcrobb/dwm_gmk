@@ -17,55 +17,47 @@
 //===========================================================================
 
 //---------------------------------------------------------------------------
-//!  \file dwm_gmk_thisdir.cc
+//!  \file dwm_gmk_uniqleft.cc
 //!  \author Daniel W. McRobb
-//!  \brief dwm_gmk_thisdir GNU make extension function
+//!  \brief dwm_gmk_uniqleft GNU make extension function
 //---------------------------------------------------------------------------
 
 extern "C" {
   #include <sys/param.h>
   #include <unistd.h>
 }
-  
-#include "dwm_gmk.h"
 
 #include <cstring>
-#include <filesystem>
-#include <string>
+#include <set>
 
-extern std::string  g_dwm_gmk_thisdir;
-extern std::string  g_dwm_gmk_thisdir_abs;
-
-namespace fs = std::filesystem;
+#include "dwm_gmk.h"
+#include "DwmGmkUtils.hh"
 
 //----------------------------------------------------------------------------
 //!  
 //----------------------------------------------------------------------------
-char *dwm_gmk_thisdir(const char *name, unsigned int argc, char *argv[])
+char *dwm_gmk_uniqleft(const char *name, unsigned int argc, char *argv[])
 {
   char  *rc = 0;
-  if (! g_dwm_gmk_thisdir.empty()) {
-    rc = gmk_alloc(g_dwm_gmk_thisdir.size() + 1);
-    if (rc) {
-      rc[g_dwm_gmk_thisdir.size()] = 0;
-      strncpy(rc, g_dwm_gmk_thisdir.c_str(), g_dwm_gmk_thisdir.size());
-    }
-  }
-  return rc;
-}
-
-//----------------------------------------------------------------------------
-//!  
-//----------------------------------------------------------------------------
-char *dwm_gmk_thisdir_abs(const char *name, unsigned int argc, char *argv[])
-{
-  char  *rc = 0;
-  if (! g_dwm_gmk_thisdir_abs.empty()) {
-    rc = gmk_alloc(g_dwm_gmk_thisdir_abs.size() + 1);
-    if (rc) {
-      rc[g_dwm_gmk_thisdir_abs.size()] = 0;
-      strncpy(rc, g_dwm_gmk_thisdir_abs.c_str(),
-              g_dwm_gmk_thisdir_abs.size());
+  if (argc == 1) {
+    std::string_view  sv(argv[0]);
+    std::vector<std::string>  v;
+    if (Dwm::Gmk::ToVector(sv, v)) {
+      std::vector<std::string> rv;
+      std::set<std::string>  seen;
+      for (const auto & word : v) {
+        if (seen.find(word) == seen.end()) {
+          seen.insert(word);
+          rv.push_back(word);
+        }
+      }
+      std::string  s;
+      Dwm::Gmk::ToString(rv, s);
+      rc = gmk_alloc(s.size() + 1);
+      if (rc) {
+        rc[s.size()] = 0;
+        strncpy(rc, s.c_str(), s.size());
+      }
     }
   }
   return rc;

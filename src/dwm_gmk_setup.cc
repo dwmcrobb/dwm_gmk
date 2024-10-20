@@ -51,8 +51,11 @@ int dwm_gmk_setup(const gmk_floc *floc)
     gmk_add_function("dwm_settop",      dwm_gmk_settop, 0, 1, 0);
     gmk_add_function("dwm_subdirs",     dwm_gmk_subdirs, 0, 2, 0);
     gmk_add_function("dwm_thisdir",     dwm_gmk_thisdir, 0, 0, 0);
+    gmk_add_function("dwm_thisdirabs",  dwm_gmk_thisdir_abs, 0, 0, 0);
     gmk_add_function("dwm_top",         dwm_gmk_top, 0, 0, 0);
     gmk_add_function("dwm_totop",       dwm_gmk_totop, 0, 1, 0);
+    gmk_add_function("dwm_uniqleft",    dwm_gmk_uniqleft, 1, 1, 0);
+    gmk_add_function("dwm_uniqright",   dwm_gmk_uniqright, 1, 1, 0);
     gmk_add_function("dwm_uniqsort",    dwm_gmk_uniqsort, 1, 1, 0);
     
     return 1;

@@ -41,16 +41,16 @@ char *dwm_gmk_rgxsearch(const char *name, unsigned int argc, char *argv[])
   char  *rc = 0;
 
   if ((argc == 2) && argv[0] && argv[1]) {
-    std::string  s(argv[0]);
-    std::string  rgxstr(argv[1]);
+    std::string  rgxstr(argv[0]);
+    std::string  text(argv[1]);
     std::regex   rgx(rgxstr, rgxflags::ECMAScript|rgxflags::optimize);
     std::smatch  sm;
     std::string  outstr;
-    if (regex_search(s, sm, rgx)) {
+    if (regex_search(text, sm, rgx)) {
       auto  it = sm.cbegin();
       outstr += it->str();
       ++it;
-      for (; it != sm.end(); ++it) {
+      for (; it != sm.cend(); ++it) {
         outstr += ' ';
         outstr += it->str();
       }

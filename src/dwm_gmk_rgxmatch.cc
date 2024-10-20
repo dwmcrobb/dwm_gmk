@@ -41,12 +41,12 @@ char *dwm_gmk_rgxmatch(const char *name, unsigned int argc, char *argv[])
   char  *rc = 0;
 
   if ((argc == 2) && argv[0] && argv[1]) {
-    std::string  s(argv[0]);
-    std::string  rgxstr(argv[1]);
+    std::string  rgxstr(argv[0]);
+    std::string  text(argv[1]);
     std::regex   rgx(rgxstr, rgxflags::ECMAScript|rgxflags::optimize);
     std::smatch  sm;
     std::string  outstr;
-    if (regex_match(s, sm, rgx)) {
+    if (regex_match(text, sm, rgx)) {
       auto  it = sm.cbegin();
       outstr += it->str();
       ++it;

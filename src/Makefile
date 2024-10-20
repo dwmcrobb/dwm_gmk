@@ -23,6 +23,8 @@ OBJFILESNP     = dwm_gmk_bison.lo \
                  dwm_gmk_totop.lo \
                  dwm_gmk_setup.lo \
                  dwm_gmk_thisdir.lo \
+                 dwm_gmk_uniqleft.lo \
+                 dwm_gmk_uniqright.lo \
                  dwm_gmk_uniqsort.lo \
                  DwmGmkUtils.lo
 OBJFILES       = $(OBJFILESNP:%.lo=../obj/%.lo)

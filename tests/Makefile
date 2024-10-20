@@ -19,11 +19,11 @@ test_relpath::
 	@echo relpath tests passed
 
 test_dirfiles::
-	@[ $(dwm_dirfiles .,Makefile) = Makefile ] || exit
+	@[ "$(dwm_dirfiles $(dwm_thisdir ),Makefile)" = Makefile ] || exit
 	@[ $(dwm_dirfiles $(dwm_thisdir )/../src,dwm_gmk_dirfiles\.cc) = dwm_gmk_dirfiles.cc ] || exit
 	@[ -n "$(dwm_dirfiles $(dwm_thisdir )/../src,.+\.cc)" ] || exit
 	@[ -z "$(dwm_dirfiles .,Make\.ile)" ] || exit
-	@[ "$(dwm_dirfiles .,Make.ile)" = Makefile ] || exit
+	@[ "$(dwm_dirfiles $(dwm_thisdir ),Make.ile)" = Makefile ] || exit
 	@[ $(words $(dwm_dirfiles $(dwm_thisdir )/../src,.+\.cc)) -ge 7 ] || exit
 	@echo dirfiles tests passed
 
@@ -41,25 +41,27 @@ test_subdirs::
 	@echo subdirs tests passed
 
 test_rgxmatch::
-	@[ "$(dwm_rgxmatch dwm,^d.+)" = "dwm" ] || exit
-	@[ "$(dwm_rgxmatch dwm,^d(.+))" = "dwm wm" ] || exit
-	@[ "$(dwm_rgxmatch dwm,.wm$$)" = "dwm" ] || exit
+	@[ "$(dwm_rgxmatch ^d.+,dwm)" = "dwm" ] || exit
+	@[ "$(dwm_rgxmatch ^d(.+),dwm)" = "dwm wm" ] || exit
+	@[ "$(dwm_rgxmatch .wm$$,dwm)" = "dwm" ] || exit
 	@echo rgxmatch tests passed
 
 test_rgxsearch::
-	@[ "$(dwm_rgxsearch dwm,d)" = "d" ] || exit
-	@[ "$(dwm_rgxsearch dwm,^d)" = "d" ] || exit
-	@[ "$(dwm_rgxsearch dwm,w)" = "w" ] || exit
-	@[ "$(dwm_rgxsearch dwm,m)" = "m" ] || exit
-	@[ "$(dwm_rgxsearch dwm,m$$)" = "m" ] || exit
-	@[ "$(dwm_rgxsearch dwm,t.+)" = "" ] || exit
-	@[ "$(dwm_rgxsearch dwm,(d).+)" = "dwm d" ] || exit
+	@[ "$(dwm_rgxsearch d,dwm)" = "d" ] || exit
+	@[ "$(dwm_rgxsearch ^d,dwm)" = "d" ] || exit
+	@[ "$(dwm_rgxsearch w,dwm)" = "w" ] || exit
+	@[ "$(dwm_rgxsearch m,dwm)" = "m" ] || exit
+	@[ "$(dwm_rgxsearch m$$,dwm)" = "m" ] || exit
+	@[ "$(dwm_rgxsearch t.+,dwm)" = "" ] || exit
+	@[ "$(dwm_rgxsearch (d).+,dwm)" = "dwm d" ] || exit
 	@echo rgxsearch tests passed
 
+$(info strawberry $(dwm_rgxsearch r,strawberry))
+
 test_rgxreplace::
-	@[ "$(dwm_rgxreplace Quick brown fox,a|e|i|o|u,[$$&])" = "Q[u][i]ck br[o]wn f[o]x" ] || exit
-	@[ "$(dwm_rgxreplace Quick brown fox, brown, [$$`])" = "Quick [Quick] fox" ] || exit
-	@[ "$(dwm_rgxreplace Quick brown fox,brown ,[$$'] )" = "Quick [fox] fox" ] || exit
+	@[ "$(dwm_rgxreplace a|e|i|o|u,[$$&],Quick brown fox)" = "Q[u][i]ck br[o]wn f[o]x" ] || exit
+	@[ "$(dwm_rgxreplace \ brown, [$$`],Quick brown fox)" = "Quick [Quick] fox" ] || exit
+	@[ "$(dwm_rgxreplace brown ,[$$'] ,Quick brown fox)" = "Quick [fox] fox" ] || exit
 	@echo rgxreplace tests passed
 
 test_rgxsubst::
@@ -164,3 +166,16 @@ test_flex2::
 	@[ "$(word 11,$(flex_rule2))" = "lexer.cc" ] || exit
 	@[ "$(word 12,$(flex_rule2))" = "--tables-file=lexertables" ] || exit
 	@[ "$(word 13,$(flex_rule2))" = "$$<" ] || exit
+
+test_uniqleft::
+	@[ "$(dwm_uniqleft a b d d b a)" = "a b d" ] || exit
+	@echo uniqleft tests passed
+
+test_uniqright::
+	@[ "$(dwm_uniqright a b d d b a)" = "d b a" ] || exit
+	@echo uniqright tests passed
+
+$(info $(dwm_top ))
+$(info $(dwm_thisdir ))
+$(info $(dwm_thisdirabs ))
+# $(info $(from_top ))

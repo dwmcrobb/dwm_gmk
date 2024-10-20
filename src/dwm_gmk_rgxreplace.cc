@@ -38,11 +38,11 @@ char *dwm_gmk_rgxreplace(const char *name, unsigned int argc, char *argv[])
   char  *rc = 0;
 
   if ((argc == 3) && argv[0] && argv[1] && argv[2]) {
-    std::string  s(argv[0]);
-    std::string  rgxstr(argv[1]);
-    std::string  fmt(argv[2]);
+    std::string  rgxstr(argv[0]);
+    std::string  fmt(argv[1]);
+    std::string  text(argv[2]);
     std::regex   rgx(rgxstr, rgxflags::ECMAScript|rgxflags::optimize);
-    std::string  outstr = regex_replace(s, rgx, fmt);
+    std::string  outstr = regex_replace(text, rgx, fmt);
     if (! outstr.empty()) {
       rc = gmk_alloc(outstr.size() + 1);
       if (rc) {

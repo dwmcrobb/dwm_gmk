@@ -7,7 +7,7 @@ LTINSTALL     := ${LIBTOOL} --mode=install ../install-sh
 LTUNINSTALL   := ${LIBTOOL} --quiet --mode=uninstall rm -f
 OBJFILESNP     = dwm_gmk_bison.lo \
                  dwm_gmk_curpath.lo \
-                 dwm_gmk_dirfiles.lo \
+                 dwm_gmk_files.lo \
                  dwm_gmk_flex.lo \
                  dwm_gmk_fromtop.lo \
                  dwm_gmk_init.lo \
@@ -19,13 +19,13 @@ OBJFILESNP     = dwm_gmk_bison.lo \
                  dwm_gmk_rgxsearch.lo \
                  dwm_gmk_rgxsubst.lo \
                  dwm_gmk_settop.lo \
+                 dwm_gmk_setup.lo \
+                 dwm_gmk_sort.lo \
                  dwm_gmk_subdirs.lo \
                  dwm_gmk_totop.lo \
-                 dwm_gmk_setup.lo \
                  dwm_gmk_thisdir.lo \
                  dwm_gmk_uniqleft.lo \
                  dwm_gmk_uniqright.lo \
-                 dwm_gmk_uniqsort.lo \
                  DwmGmkUtils.lo
 OBJFILES       = $(OBJFILESNP:%.lo=../obj/%.lo)
 shlib_version  = $(shell ../getvers.sh -s)

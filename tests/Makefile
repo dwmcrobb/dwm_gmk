@@ -4,7 +4,7 @@ $(call dwm_gmk_init)
 
 include $(dwm_thisdir )/../Makefile.vars
 
-tests:: test_relpath test_dirfiles test_uniqsort test_subdirs test_rgxmatch \
+tests:: test_relpath test_files test_sort test_subdirs test_rgxmatch \
         test_rgxsearch test_rgxreplace test_rgxsubst test_bison1 test_bison2 \
 	test_bison3 test_flex1 test_flex2
 
@@ -18,19 +18,19 @@ test_relpath::
 	@[ "/$(dwm_relpath /,$(dwm_curpath ))" = $(shell pwd) ] || exit
 	@echo relpath tests passed
 
-test_dirfiles::
-	@[ "$(dwm_dirfiles $(dwm_thisdir ),Makefile)" = Makefile ] || exit
-	@[ $(dwm_dirfiles $(dwm_thisdir )/../src,dwm_gmk_dirfiles\.cc) = dwm_gmk_dirfiles.cc ] || exit
-	@[ -n "$(dwm_dirfiles $(dwm_thisdir )/../src,.+\.cc)" ] || exit
-	@[ -z "$(dwm_dirfiles .,Make\.ile)" ] || exit
-	@[ "$(dwm_dirfiles $(dwm_thisdir ),Make.ile)" = Makefile ] || exit
-	@[ $(words $(dwm_dirfiles $(dwm_thisdir )/../src,.+\.cc)) -ge 7 ] || exit
-	@echo dirfiles tests passed
+test_files::
+	@[ "$(dwm_files $(dwm_thisdir ),Makefile)" = Makefile ] || exit
+	@[ $(dwm_files $(dwm_thisdir )/../src,dwm_gmk_files\.cc) = dwm_gmk_files.cc ] || exit
+	@[ -n "$(dwm_files $(dwm_thisdir )/../src,.+\.cc)" ] || exit
+	@[ -z "$(dwm_files .,Make\.ile)" ] || exit
+	@[ "$(dwm_files $(dwm_thisdir ),Make.ile)" = Makefile ] || exit
+	@[ $(words $(dwm_files $(dwm_thisdir )/../src,.+\.cc)) -ge 7 ] || exit
+	@echo files tests passed
 
-test_uniqsort::
-	@[ "$(dwm_uniqsort a b a b a b c a b c d)" = "a b c d" ] || exit
-	@[ "$(dwm_uniqsort d c b a c b a b a b a)" = "a b c d" ] || exit
-	@echo uniqsort tests passed
+test_sort::
+	@[ "$(dwm_sort a b a b a b c a b c d)" = "a a a a b b b b c c d" ] || exit
+	@[ "$(dwm_sort d c b a c b a b a b a)" = "a a a a b b b b c c d" ] || exit
+	@echo sort tests passed
 
 test_subdirs::
 	@[ "$(dwm_subdirs )" = "" ] || exit

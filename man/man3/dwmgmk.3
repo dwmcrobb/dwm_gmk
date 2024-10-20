@@ -6,7 +6,7 @@
 .Nm dwm_bison ,
 .Nm dwm_curpath ,
 .Nm dwm_cwd ,
-.Nm dwm_dirfiles ,
+.Nm dwm_files ,
 .Nm dwm_flex ,
 .Nm dwm_fromtop ,
 .Nm dwm_pwd ,
@@ -17,14 +17,14 @@
 .Nm dwm_rgxsearch ,
 .Nm dwm_rgxsubst ,
 .Nm dwm_settop ,
+.Nm dwm_sort ,
 .Nm dwm_subdirs ,
 .Nm dwm_thisdir ,
 .Nm dwm_thisdirabs ,
 .Nm dwm_top ,
 .Nm dwm_totop ,
 .Nm dwm_uniqleft ,
-.Nm dwm_uniqright ,
-.Nm dwm_uniqsort
+.Nm dwm_uniqright
 .Nd GNU make extensions
 .Sh LIBRARY
 .Lb dwm_gmk.so
@@ -36,7 +36,7 @@ $(call dwm_gmk_init)
 $(eval $(dwm_bison bison_source_file[,bison_args]))
 $(dwm_curpath )
 $(dwm_cwd )
-$(dwm_dirfiles directory_path,regexp)
+$(dwm_files directory_path,regexp)
 $(eval $(dwm_flex flex_source_file[,flex_args]))
 $(dwm_fromtop\ )                                                     
 $(dwm_fromtop path)
@@ -47,15 +47,15 @@ $(dwm_rgxreplace\ regexp,format,text)
 $(dwm_rgxsearch\ regexp,text)
 $(dwm_rgxsubst\ regexp,format,text)
 $(dwm_settop\ )
+$(dwm_sort text)
 $(dwm_subdirs\ )
 $(dwm_thisdir\ )
 $(dwm_thisdirabs\ )
 $(dwm_top\ )
 $(dwm_totop\ )
 $(dwm_totop path)
-$(dwm_uniqleft words)
-$(dwm_uniqright words)
-$(dwm_uniqsort words)
+$(dwm_uniqleft text)
+$(dwm_uniqright text)
 .Ed
 .Sh DESCRIPTION
 dwm_gmk.so contains a set of utility functions that can be loaded into
@@ -105,8 +105,8 @@ Note that this is different than the result of
 .Sx dwm_pwd ;
 GNU make does not set the PWD environment variable when
 invoked as 'make -C somedir ...'.
-.Ss dwm_dirfiles
-Usage: $(dwm_dirfiles directory_path,regexp)
+.Ss dwm_files
+Usage: $(dwm_files directory_path,regexp)
 .Pp
 Returns a list of files contained in \fIdirectory_path\fR whose name
 matches the regular expression \fIregexp\fR.  Note that \fIregexp\fR is
@@ -203,6 +203,17 @@ Usage: $(dwm_settop\ )
 Should be called once, from a file in the top level of the project.
 This will set the top level directory, which can later be fetched with
 .Sx dwm_top .
+.Ss dwm_sort
+Usage: $(dwm_sort text)
+.Pp
+Returns a sorted version of the words in \fItext\fR (lexicographical).
+Unlike GNU make's built-in \fIsort\fR, does not remove duplicates.
+.Pp
+Example:
+.Dl $(dwm_sort d c b a c b a b a b a)
+.Pp
+Would return:
+.Dl a a a a b b b b c c d
 .Ss dwm_subdirs
 Usage: $(dwm_subdirs\ directory_path,regexp)
 .Pp
@@ -230,20 +241,38 @@ Note that the returned value is an absolute path.
 .Ss dwm_top
 Usage: $(dwm_top\ )
 .Pp
+.Bd -filled
 Returns the top level directory of the project, which was set with
-.Sx dwm_settop .  This is an absolute path.
+.Sx dwm_settop .
+This is an absolute path.
+.Ed
 .Ss dwm_totop
 Usage: $(dwm_totop\ )
 Usage: $(dwm_totop path)
 .Ss dwm_uniqleft
-Usage: $(dwm_uniqleft words)
-.Ss dwm_uniqleft
-Usage: $(dwm_uniqright words)
-.Ss dwm_uniqsort
-Usage: $(dwm_uniqsort words)
+Usage: $(dwm_uniqleft text)
+Returns a copy of \fItext\fR with rightmost duplicates removed (leftmost
+retained).  Unlike GNU make's built-in \fIsort\fR, does not sort.  Useful
+for removing duplicate complier and linker flags or filenames without
+changing the order.
 .Pp
-Returns a sorted version of \fIwords\fR, with duplicates removed.
-
+Example:
+.Dl $(dwm_uniqleft a b d d b a)
+.Pp
+Would return:
+.Dl a b d
+.Ss dwm_uniqright
+Usage: $(dwm_uniqright text)
+Returns a copy of \fItext\fR with leftmost duplicates removed (rightmost
+retained).  Unlike GNU make's built-in \fIsort\fR, does not sort.  Useful
+for removing duplicate complier and linker flags or filenames without
+changing the order.
+.Pp
+Example:
+.Dl $(dwm_uniqleft a b d d b a)
+.Pp
+Would return:
+.Dl d b a
 .Sh SEE ALSO
 .Rs
 See

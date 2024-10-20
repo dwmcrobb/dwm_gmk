@@ -17,72 +17,40 @@
 //===========================================================================
 
 //---------------------------------------------------------------------------
-//!  \file dwm_gmk_dirfiles.cc
+//!  \file dwm_gmk_sort.cc
 //!  \author Daniel W. McRobb
-//!  \brief dwm_gmk_dirfiles GNU make extension function
+//!  \brief dwm_gmk_sort GNU make extension function
 //---------------------------------------------------------------------------
 
 extern "C" {
   #include <sys/param.h>
   #include <unistd.h>
 }
-  
+
+#include <algorithm>
 #include <cstring>
-#include <filesystem>
-#include <regex>
-#include <string>
 
 #include "dwm_gmk.h"
 #include "DwmGmkUtils.hh"
 
-namespace fs = std::filesystem;
-
 //----------------------------------------------------------------------------
 //!  
 //----------------------------------------------------------------------------
-char *dwm_gmk_dirfiles(const char *name, unsigned int argc, char *argv[])
+char *dwm_gmk_sort(const char *name, unsigned int argc, char *argv[])
 {
-  namespace  rgxflags = std::regex_constants;
-  
   char  *rc = 0;
-  std::string  dirPath, rgxstr;
-
-  if ((argc >= 1) && argv[0]) {
-    dirPath = argv[0];
-  }
-  if ((argc == 2) && argv[1]) {
-    rgxstr = argv[1];
-  }
-
-  if (dirPath.empty()) {
-    dirPath = dwm_gmk_thisdir("dwm_thisdir", 0, 0);
-  }
-  if (rgxstr.empty()) {
-    rgxstr = ".+";
-  }
-
-  std::regex   rgx(rgxstr, rgxflags::ECMAScript|rgxflags::optimize);
-  std::smatch  sm;
-  std::string  filesstr;
-
-  try {
-    for (auto const & dirEntry : fs::directory_iterator{dirPath}) {
-      if (Dwm::Gmk::IsFile(dirEntry.path())) {
-        std::string  fileName = dirEntry.path().filename().string();
-        if (regex_match(fileName, sm, rgx)) {
-          filesstr += fileName + ' ';
-        }
+  if (argc == 1) {
+    std::string_view  sv(argv[0]);
+    std::vector<std::string>  v;
+    if (Dwm::Gmk::ToVector(sv, v)) {
+      std::sort(v.begin(), v.end());
+      std::string  s;
+      Dwm::Gmk::ToString(v, s);
+      rc = gmk_alloc(s.size() + 1);
+      if (rc) {
+        rc[s.size()] = 0;
+        strncpy(rc, s.c_str(), s.size());
       }
-    }
-  }
-  catch (...) {
-  }
-  
-  if (! filesstr.empty()) {
-    rc = gmk_alloc(filesstr.size());
-    rc[filesstr.size() - 1] = '\0';
-    if (rc) {
-      strncpy(rc, filesstr.c_str(), filesstr.size() - 1);
     }
   }
   return rc;

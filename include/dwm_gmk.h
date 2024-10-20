@@ -32,7 +32,7 @@ extern "C" {
     
     char *dwm_gmk_bison(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_curpath(const char *name, unsigned int argc, char *argv[]);
-    char *dwm_gmk_dirfiles(const char *name, unsigned int argc, char *argv[]);
+    char *dwm_gmk_files(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_flex(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_fromtop(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_pwd(const char *name, unsigned int argc, char *argv[]);
@@ -43,6 +43,7 @@ extern "C" {
     char *dwm_gmk_rgxsearch(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_rgxsubst(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_settop(const char *name, unsigned int argc, char *argv[]);
+    char *dwm_gmk_sort(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_subdirs(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_thisdir(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_thisdir_abs(const char *name, unsigned int argc, char *argv[]);
@@ -50,5 +51,4 @@ extern "C" {
     char *dwm_gmk_totop(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_uniqleft(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_uniqright(const char *name, unsigned int argc, char *argv[]);
-    char *dwm_gmk_uniqsort(const char *name, unsigned int argc, char *argv[]);
 }

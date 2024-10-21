@@ -39,6 +39,7 @@
 //!  \brief NOT YET DOCUMENTED
 //---------------------------------------------------------------------------
 
+#include <algorithm>
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>
@@ -88,17 +89,11 @@ int main(int argc, char *argv[])
   if (argc >= 3) {
     string  msg = argv[1];
     string  cmd;
-    for (int i = 2; i < argc; ++i) {
-      if (strlen(argv[i])) {
-        cmd += argv[i];
-        if (i < (argc - 1)) {
-          cmd += ' ';
-        }
-      }
-    }
+    for_each(&argv[2], &argv[argc],
+             [&] (auto arg) { cmd += arg; cmd += ' '; });
     if (! cmd.empty()) {
       string  outstr;
-      if (GetCommandOutput(msg, cmd + " 2>&1", outstr)) {
+      if (GetCommandOutput(msg, cmd + "2>&1", outstr)) {
         cerr << cmd << '\n' << outstr;
         exit(1);
       }

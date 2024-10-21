@@ -56,6 +56,31 @@ static void Usage(const char *argv0)
 //----------------------------------------------------------------------------
 //!  
 //----------------------------------------------------------------------------
+static int GetCommandOutput(const std::string & msg, const std::string & cmd,
+                            std::string & outstr)
+{
+  int  rc = 1;
+  outstr.clear();
+  FILE  *p = popen(cmd.c_str(), "r");
+  if (p) {
+    if (! msg.empty()) {
+      std::cout << msg << '\n';
+    }
+    char    buf[256];
+    while (fgets(buf, sizeof(buf), p)) {
+      outstr += buf;
+    }
+    int  cmdexit = pclose(p);
+    if (cmdexit == 0) {
+      rc = 0;
+    }
+  }
+  return rc;
+}
+
+//----------------------------------------------------------------------------
+//!  
+//----------------------------------------------------------------------------
 int main(int argc, char *argv[])
 {
   using namespace std;
@@ -72,27 +97,12 @@ int main(int argc, char *argv[])
       }
     }
     if (! cmd.empty()) {
-      string pipecmd = cmd + " 2>&1";
-      FILE  *p = popen(pipecmd.c_str(), "r");
-      if (p) {
-        if (! msg.empty()) {
-          cout << msg << '\n';
-        }
-        string  outstr;
-        char    buf[256];
-        while (fgets(buf, sizeof(buf), p)) {
-          outstr += buf;
-        }
-        int  cmdexit = pclose(p);
-        if (cmdexit) {
-          if (! msg.empty()) {
-            cerr << msg << '\n';
-          }
-          cerr << cmd << '\n' << outstr;
-          exit(1);
-        }
-        exit(cmdexit);
+      string  outstr;
+      if (GetCommandOutput(msg, cmd + " 2>&1", outstr)) {
+        cerr << cmd << '\n' << outstr;
+        exit(1);
       }
+      exit(0);
     }
     else {
       Usage(argv[0]);

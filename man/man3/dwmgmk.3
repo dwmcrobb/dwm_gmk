@@ -9,6 +9,7 @@
 .Nm dwm_files ,
 .Nm dwm_flex ,
 .Nm dwm_fromtop ,
+.Nm dwm_include ,
 .Nm dwm_pwd ,
 .Nm dwm_relpath ,
 .Nm dwm_relpwd ,
@@ -20,7 +21,6 @@
 .Nm dwm_sort ,
 .Nm dwm_subdirs ,
 .Nm dwm_thisdir ,
-.Nm dwm_thisdirabs ,
 .Nm dwm_top ,
 .Nm dwm_totop ,
 .Nm dwm_uniqleft ,
@@ -40,6 +40,7 @@ $(dwm_files directory_path,regexp)
 $(eval $(dwm_flex flex_source_file[,flex_args]))
 $(dwm_fromtop\ )                                                     
 $(dwm_fromtop path)
+$(call dwm_include,filename)
 $(dwm_pwd\ )
 $(dwm_relpath from,to)
 $(dwm_rgxmatch\ regexp,text)

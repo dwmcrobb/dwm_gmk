@@ -17,46 +17,63 @@
 //===========================================================================
 
 //---------------------------------------------------------------------------
-//!  \file dwm_gmk_totop.cc
+//!  \file dwm_gmk_my.cc
 //!  \author Daniel W. McRobb
-//!  \brief dwm_gmk_totop GNU make extension function
+//!  \brief dwm_gmk_my GNU make extension function
 //---------------------------------------------------------------------------
 
+#include <algorithm>
+#include <cstdlib>
 #include <cstring>
-#include <filesystem>
-#include <stack>
-#include <string>
+#include <iostream>
+#include <map>
 
 #include "dwm_gmk.h"
+#include "DwmGmkMyVars.hh"
 #include "DwmGmkUtils.hh"
 
-extern std::stack<std::string>  g_thisdirStack;
+using namespace std;
 
-namespace fs = std::filesystem;
+static Dwm::Gmk::MyVars  g_myVars;
 
 //----------------------------------------------------------------------------
 //!  
 //----------------------------------------------------------------------------
-char *dwm_gmk_totop(const char *name, unsigned int argc, char *argv[])         
+char *dwm_gmk_myns(const char *name, unsigned int argc, char *argv[])
 {
-  char  *rel = 0;
-  if ((! Dwm::Gmk::Top().empty()) && (! g_thisdirStack.empty())) {
-    std::string  fromPath = g_thisdirStack.top();
-    if (argc == 1) {
-      fromPath += '/';
-      fromPath += argv[0];
+  char  *rc = nullptr;
+  if ((argc == 1) && (argv[0])) {
+    char  *ns = gmk_expand(argv[0]);
+    if (ns) {
+      g_myVars.SetNamespace(ns);
+      gmk_floc  floc;
+      string  toEval(string("myns := ") + g_myVars.GetNamespaceString());
+      gmk_eval(toEval.c_str(), &floc);
     }
-    fromPath = fs::weakly_canonical(fromPath);
-    if (Dwm::Gmk::IsFile(fromPath)) {
-      fromPath = fs::path(fromPath).parent_path();
-    }
-    std::string  relPath = fs::proximate(Dwm::Gmk::Top(), fromPath);
-    if (! relPath.empty()) {
-      rel = gmk_alloc(relPath.size() + 1);
-      if (rel) {
-        strncpy(rel, relPath.c_str(), relPath.size());
+  }
+  else if (argc == 0) {
+    rc = g_myVars.GetNamespace();
+  }
+  
+  return rc;
+}
+
+//----------------------------------------------------------------------------
+//!  
+//----------------------------------------------------------------------------
+char *dwm_gmk_my(const char *name, unsigned int argc, char *argv[])
+{
+  char  *rc = nullptr;
+  if ((argc == 1) && argv[0]) {
+    vector<string>  v;
+    if (Dwm::Gmk::ToVector(argv[0], v, "\\s+")) {
+      if (v.size() == 1) {
+        rc = g_myVars.GetVarValue(v[0]);
+      }
+      else if (v.size() >= 3) {
+        g_myVars.SetVarValue(v);
       }
     }
   }
-  return rel;
+  return rc;
 }

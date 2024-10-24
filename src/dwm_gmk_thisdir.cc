@@ -31,10 +31,10 @@ extern "C" {
 
 #include <cstring>
 #include <filesystem>
+#include <stack>
 #include <string>
 
-extern std::string  g_dwm_gmk_thisdir;
-extern std::string  g_dwm_gmk_thisdir_abs;
+extern std::stack<std::string>  g_thisdirStack;
 
 namespace fs = std::filesystem;
 
@@ -44,28 +44,11 @@ namespace fs = std::filesystem;
 char *dwm_gmk_thisdir(const char *name, unsigned int argc, char *argv[])
 {
   char  *rc = 0;
-  if (! g_dwm_gmk_thisdir.empty()) {
-    rc = gmk_alloc(g_dwm_gmk_thisdir.size() + 1);
+  if (! g_thisdirStack.empty()) {
+    rc = gmk_alloc(g_thisdirStack.top().size() + 1);
     if (rc) {
-      rc[g_dwm_gmk_thisdir.size()] = 0;
-      strncpy(rc, g_dwm_gmk_thisdir.c_str(), g_dwm_gmk_thisdir.size());
-    }
-  }
-  return rc;
-}
-
-//----------------------------------------------------------------------------
-//!  
-//----------------------------------------------------------------------------
-char *dwm_gmk_thisdir_abs(const char *name, unsigned int argc, char *argv[])
-{
-  char  *rc = 0;
-  if (! g_dwm_gmk_thisdir_abs.empty()) {
-    rc = gmk_alloc(g_dwm_gmk_thisdir_abs.size() + 1);
-    if (rc) {
-      rc[g_dwm_gmk_thisdir_abs.size()] = 0;
-      strncpy(rc, g_dwm_gmk_thisdir_abs.c_str(),
-              g_dwm_gmk_thisdir_abs.size());
+      rc[g_thisdirStack.top().size()] = 0;
+      strncpy(rc, g_thisdirStack.top().c_str(), g_thisdirStack.top().size());
     }
   }
   return rc;

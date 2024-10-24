@@ -122,20 +122,23 @@ char *dwm_gmk_flex(const char *name, unsigned int argc, char *argv[])
     std::string  targets_str = FlexTargets(targets, nontargets);
     std::string  rulestr("FLEXTARGETS += " + targets_str + '\n');
     rulestr += targets_str + ": " + string(argv[0]) + '\n';
-    rulestr += "\tflex";
+    string cmdstr("\t@dwmgmk_quiet \"Generating lexer from "
+                  + Dwm::Gmk::RelPwd(argv[0]) + "\" ");
+    cmdstr += "flex";
     if (! nontargets.empty()) {
       for (const auto & nontarget : nontargets) {
-        rulestr += ' ';
-        rulestr += nontarget;
+        cmdstr += ' ';
+        cmdstr += nontarget;
       }
     }
     if (! targets.empty()) {
       for (const auto & target : targets) {
-        rulestr += ' ';
-        rulestr += target.second.first + target.second.second;
+        cmdstr += ' ';
+        cmdstr += target.second.first + target.second.second;
       }
     }
-    rulestr += " $<\n";
+    cmdstr += " $<\n";
+    rulestr += cmdstr;
     rule = gmk_alloc(rulestr.size() + 1);
     if (rule) {
       rule[rulestr.size()] = 0;

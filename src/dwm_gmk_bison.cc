@@ -149,20 +149,23 @@ char *dwm_gmk_bison(const char *name, unsigned int argc, char *argv[])
     std::string  targets_str = BisonTargets(targets, nontargets);
     std::string  rulestr("BISONTARGETS += " + targets_str + '\n');
     rulestr += targets_str + " &: " + string(argv[0]) + '\n';
-    rulestr += "\tbison";
+    std::string  cmdstr("@dwmgmk_quiet \"generating parser from ");
+    cmdstr += Dwm::Gmk::RelPwd(argv[0]) + "\" ";
+    cmdstr += "bison";
     if (! nontargets.empty()) {
       for (const auto & nontarget : nontargets) {
-        rulestr += ' ';
-        rulestr += nontarget;
+        cmdstr += ' ';
+        cmdstr += nontarget;
       }
     }
     if (! targets.empty()) {
       for (const auto & target : targets) {
-        rulestr += ' ';
-        rulestr += target.second.first + target.second.second;
+        cmdstr += ' ';
+        cmdstr += target.second.first + target.second.second;
       }
     }
-    rulestr += " $<\n";
+    cmdstr += " $<\n";
+    rulestr += "\t" + cmdstr;
     rule = gmk_alloc(rulestr.size() + 1);
     if (rule) {
       rule[rulestr.size()] = 0;

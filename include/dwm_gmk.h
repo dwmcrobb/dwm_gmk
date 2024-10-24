@@ -28,13 +28,15 @@ extern "C" {
     extern int plugin_is_GPL_compatible;
 
     int dwm_gmk_setup(const gmk_floc *floc);
-    char *dwm_gmk_init(const char *name, unsigned int argc, char *argv[]);
-    
     char *dwm_gmk_bison(const char *name, unsigned int argc, char *argv[]);
+    char *dwm_gmk_cppdeps(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_curpath(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_files(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_flex(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_fromtop(const char *name, unsigned int argc, char *argv[]);
+    char *dwm_gmk_include(const char *name, unsigned int argc, char *argv[]);
+    char *dwm_gmk_my(const char *name, unsigned int argc, char *argv[]);
+    char *dwm_gmk_myns(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_pwd(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_relpath(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_relpwd(const char *name, unsigned int argc, char *argv[]);
@@ -46,7 +48,6 @@ extern "C" {
     char *dwm_gmk_sort(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_subdirs(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_thisdir(const char *name, unsigned int argc, char *argv[]);
-    char *dwm_gmk_thisdir_abs(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_top(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_totop(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_uniqleft(const char *name, unsigned int argc, char *argv[]);

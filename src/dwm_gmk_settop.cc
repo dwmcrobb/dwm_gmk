@@ -23,13 +23,13 @@
 //---------------------------------------------------------------------------
 
 #include "dwm_gmk.h"
+#include "DwmGmkUtils.hh"
 
 #include <filesystem>
 #include <iostream>
 #include <string>
 
-std::string  g_dwm_gmk_topdir_abs;
-
+using namespace std;
 namespace fs = std::filesystem;
 
 //----------------------------------------------------------------------------
@@ -37,23 +37,11 @@ namespace fs = std::filesystem;
 //----------------------------------------------------------------------------
 char *dwm_gmk_settop(const char *name, unsigned int argc, char *argv[])
 {
-  char  *rc = 0;
-  char  *mkfileList = gmk_expand("$(MAKEFILE_LIST)");
-  if (mkfileList) {
-    std::string  s(mkfileList);
-    fs::path  mkfile;
-    size_t  idx = s.find_last_of(' ');
-    if (idx == std::string::npos) {
-      mkfile = fs::weakly_canonical(s);
-    }
-    else {
-      mkfile = fs::weakly_canonical(s.substr(idx+1));
-    }
-    g_dwm_gmk_topdir_abs = mkfile.parent_path();
-    gmk_free(mkfileList);
-  }
-  if (rc) {
-    gmk_free(rc);
+  vector<string>  makefiles;
+  if (Dwm::Gmk::GetMakefilesList(makefiles)) {
+    fs::path  mkfile = fs::weakly_canonical(makefiles.back());
+    Dwm::Gmk::SetTop(mkfile.parent_path());
+    gmk_eval(std::string("TOP := " + Dwm::Gmk::Top()).c_str(), nullptr);
   }
   return 0;
 }
@@ -64,10 +52,11 @@ char *dwm_gmk_settop(const char *name, unsigned int argc, char *argv[])
 char *dwm_gmk_top(const char *name, unsigned int argc, char *argv[])         
 {
   char  *top = 0;
-  if (! g_dwm_gmk_topdir_abs.empty()) {
-    top = gmk_alloc(g_dwm_gmk_topdir_abs.size() + 1);
+  std::string  topstr = Dwm::Gmk::Top();
+  if (! topstr.empty()) {
+    top = gmk_alloc(topstr.size() + 1);
     if (top) {
-      strncpy(top, g_dwm_gmk_topdir_abs.c_str(), g_dwm_gmk_topdir_abs.size());
+      strncpy(top, topstr.c_str(), topstr.size());
     }
   }
   return top;

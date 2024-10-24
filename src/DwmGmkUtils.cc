@@ -22,6 +22,13 @@
 //!  \brief utility functions for dwmgmk GNU make extensions
 //---------------------------------------------------------------------------
 
+extern "C" {
+  #include <gnumake.h>
+}
+
+#include <cstdlib>
+#include <regex>
+
 #include "DwmGmkUtils.hh"
 
 namespace Dwm {
@@ -30,7 +37,9 @@ namespace Dwm {
 
     using namespace std;
     namespace  fs = std::filesystem;
-      
+
+    static std::string  g_dwm_gmk_topdir_abs;
+    
     //------------------------------------------------------------------------
     //!  
     //------------------------------------------------------------------------
@@ -77,7 +86,23 @@ namespace Dwm {
       }
       return (! v.empty());
     }
-    
+
+    //------------------------------------------------------------------------
+    //!  
+    //------------------------------------------------------------------------
+    bool ToVector(const std::string_view & s, vector<string> & v,
+                  const string & rgxstr)
+    {
+      v.clear();
+      regex  rgx(rgxstr, regex::ECMAScript|regex::optimize);
+      regex_token_iterator it(s.begin(), s.end(), rgx, -1);
+      std::cregex_token_iterator end;
+      while (it != end) {
+        v.push_back(*it++);
+      }
+      return (! v.empty());
+    }
+
     //------------------------------------------------------------------------
     //!  
     //------------------------------------------------------------------------
@@ -115,7 +140,98 @@ namespace Dwm {
       }
       return rc;
     }
-    
+
+    //------------------------------------------------------------------------
+    //!  
+    //------------------------------------------------------------------------
+    bool GetMakefilesList(std::vector<std::string> & makefiles)
+    {
+      bool  rc = false;
+      makefiles.clear();
+      char  *mkfileList = gmk_expand("$(MAKEFILE_LIST)");
+      if (mkfileList) {
+        rc = ToVector(string_view(mkfileList), makefiles);
+        gmk_free(mkfileList);
+      }
+      return rc;
+    }
+
+    //------------------------------------------------------------------------
+    //!  
+    //------------------------------------------------------------------------
+    std::string Pwd()
+    {
+      std::string  pwdstr;
+      char  *pwd = getenv("PWD");
+      if (pwd) {
+        pwdstr = pwd;
+      }
+      return pwdstr;
+    }
+
+    //------------------------------------------------------------------------
+    //!  
+    //------------------------------------------------------------------------
+    std::string RelPwd(const std::string & p)
+    {
+      return fs::relative(p, Pwd());
+    }
+
+    //------------------------------------------------------------------------
+    //!  
+    //------------------------------------------------------------------------
+    std::string Top()
+    {
+      return g_dwm_gmk_topdir_abs;
+    }
+
+    //------------------------------------------------------------------------
+    //!  
+    //------------------------------------------------------------------------
+    void SetTop(const std::string & top)
+    {
+      g_dwm_gmk_topdir_abs = top;
+      return;
+    }
+
+    //------------------------------------------------------------------------
+    //!  
+    //------------------------------------------------------------------------
+    std::string RelTop(const std::string & p)
+    {
+      return fs::relative(p, Top());
+    }
+
+    //------------------------------------------------------------------------
+    //!  
+    //------------------------------------------------------------------------
+    std::string Expand(const std::string & expr)
+    {
+      std::string  rc;
+      char   *expanded = gmk_expand(expr.c_str());
+      if (expanded) {
+        rc = expanded;
+        gmk_free(expanded);
+      }
+      return rc;
+    }
+
+    //------------------------------------------------------------------------
+    //!  
+    //------------------------------------------------------------------------
+    char *GmkCopy(const std::string & s)
+    {
+      char  *cp = nullptr;
+      if (! s.empty()) {
+        cp = gmk_alloc(s.size() + 1);
+        if (cp) {
+          cp[s.size()] = 0;
+          strncpy(cp, s.c_str(), s.size());
+        }
+      }
+      return cp;
+    }
+
   }  // namespace Gmk
 
 }  // namespace Dwm

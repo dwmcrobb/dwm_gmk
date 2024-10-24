@@ -17,46 +17,58 @@
 //===========================================================================
 
 //---------------------------------------------------------------------------
-//!  \file dwm_gmk_totop.cc
+//!  \file dwm_gmk_cppdeps.cc
 //!  \author Daniel W. McRobb
-//!  \brief dwm_gmk_totop GNU make extension function
+//!  \brief dwm_gmk_cppdeps GNU make extension function
 //---------------------------------------------------------------------------
 
-#include <cstring>
-#include <filesystem>
-#include <stack>
-#include <string>
+#include <iostream>
 
 #include "dwm_gmk.h"
 #include "DwmGmkUtils.hh"
 
-extern std::stack<std::string>  g_thisdirStack;
+using namespace std;
 
-namespace fs = std::filesystem;
+//  What do I need as arguments?
+//   - deps directory path
+//   - object directory path
+//   - source file name
+//   - compile command
+//   - object file extensions (optional, assume .o)
 
 //----------------------------------------------------------------------------
 //!  
 //----------------------------------------------------------------------------
-char *dwm_gmk_totop(const char *name, unsigned int argc, char *argv[])         
+char *dwm_gmk_cppdeps(const char *name, unsigned int argc, char *argv[])
 {
-  char  *rel = 0;
-  if ((! Dwm::Gmk::Top().empty()) && (! g_thisdirStack.empty())) {
-    std::string  fromPath = g_thisdirStack.top();
-    if (argc == 1) {
-      fromPath += '/';
-      fromPath += argv[0];
+  char  *rule = 0;
+  
+  if ((argc >= 4) && argv[0] && argv[1] && argv[2] && argv[3]) {
+    string  depsdir(argv[0]);
+    string  objdir(argv[1]);
+    string  srcfile(argv[2]);
+    string  cxxcmd(argv[3]);
+    vector<string>  obj_exts = { ".o" };
+    if (argc >= 5) {
+      Dwm::Gmk::ToVector(string(argv[4]), obj_exts);
     }
-    fromPath = fs::weakly_canonical(fromPath);
-    if (Dwm::Gmk::IsFile(fromPath)) {
-      fromPath = fs::path(fromPath).parent_path();
+    string  rulestr(depsdir + "/%_deps: " + srcfile + '\n');
+    rulestr += "\t@echo making dependencies for $(dwm_relpwd $<)\n";
+    rulestr += "\t@set -e; \\\n";
+    rulestr += "\t" + cxxcmd + " $< | \\\n";
+    rulestr += "sed 's|\\($*\\).o[ :]*|";
+    for (auto ext : obj_exts) {
+      rulestr += objdir + "/\\1" + ext;
+      rulestr += ' ';
     }
-    std::string  relPath = fs::proximate(Dwm::Gmk::Top(), fromPath);
-    if (! relPath.empty()) {
-      rel = gmk_alloc(relPath.size() + 1);
-      if (rel) {
-        strncpy(rel, relPath.c_str(), relPath.size());
-      }
+    rulestr += "$(@D)/$(@F) : |g' > $@ ; [ -s $@ ] || \\\n";
+    rulestr += "rm -f $@\n";
+    rule = gmk_alloc(rulestr.size() + 1);
+    if (rule) {
+      rule[rulestr.size()] = 0;
+      strncpy(rule, rulestr.c_str(), rulestr.size());
     }
   }
-  return rel;
+  return rule;
 }
+

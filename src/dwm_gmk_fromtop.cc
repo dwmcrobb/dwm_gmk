@@ -22,15 +22,15 @@
 //!  \brief dwm_gmk_fromtop GNU make extension function
 //---------------------------------------------------------------------------
 
-#include "dwm_gmk.h"
-
 #include <cstring>
 #include <filesystem>
 #include <iostream>
-#include <string>
+#include <stack>
 
-extern std::string  g_dwm_gmk_thisdir_abs;
-extern std::string  g_dwm_gmk_topdir_abs;
+#include "dwm_gmk.h"
+#include "DwmGmkUtils.hh"
+
+extern std::stack<std::string> g_thisdirStack;
 
 namespace fs = std::filesystem;
 
@@ -40,13 +40,13 @@ namespace fs = std::filesystem;
 char *dwm_gmk_fromtop(const char *name, unsigned int argc, char *argv[])
 {
   char  *rel = 0;
-  if ((! g_dwm_gmk_topdir_abs.empty()) && (! g_dwm_gmk_thisdir_abs.empty())) {
-    std::string  toPath = g_dwm_gmk_thisdir_abs;
+  if ((! Dwm::Gmk::Top().empty()) && (! g_thisdirStack.empty())) {
+    std::string  toPath = g_thisdirStack.top();
     if (argc == 1) {
       toPath += '/';
       toPath += argv[0];
     }
-    std::string  relPath = fs::relative(toPath, g_dwm_gmk_topdir_abs);
+    std::string  relPath = Dwm::Gmk::RelTop(toPath);
     if (! relPath.empty()) {
       rel = gmk_alloc(relPath.size() + 1);
       if (rel) {

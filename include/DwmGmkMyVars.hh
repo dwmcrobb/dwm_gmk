@@ -13,10 +13,15 @@ namespace Dwm {
     {
     public:
       void SetNamespace(const std::string & ns);
-      char *GetNamespace();
-      std::string GetNamespaceString();
+      char *GetNamespace() const;
+      std::string GetNamespaceString() const;
       void SetVarValue(const std::vector<std::string> & exprVec);
       char *GetVarValue(const std::string & varName);
+      char *GetVarValue(const std::string & ns,
+                        const std::string & varName);
+      char *GetVarNames(const std::string & ns);
+      char *GetVarNames();
+      std::string GetVarNamesString(const std::string & ns);
       
     private:
       typedef struct {
@@ -28,7 +33,7 @@ namespace Dwm {
       using  Namespace = std::string;
 
       mutable std::shared_mutex                      _mtx;
-      std::string                                    _ns;
+      std::unordered_map<std::string,std::string>    _namespaces;
       std::unordered_map<Namespace,PerNamespaceMap>  _vars;
 
       static std::string GetExprRHS(const std::vector<std::string> & args);

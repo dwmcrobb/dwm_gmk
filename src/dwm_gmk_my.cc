@@ -77,3 +77,19 @@ char *dwm_gmk_my(const char *name, unsigned int argc, char *argv[])
   }
   return rc;
 }
+
+//----------------------------------------------------------------------------
+//!  
+//----------------------------------------------------------------------------
+char *dwm_gmk_myvn(const char *name, unsigned int argc, char *argv[])
+{
+  char  *rc = nullptr;
+  string  ns(argv[0]);
+  if ((argc == 0) || ns.empty()) {
+    rc = g_myVars.GetVarNames();
+  }
+  else if ((argc == 1) && argv[0]) {
+    rc = g_myVars.GetVarNames(argv[0]);
+  }
+  return rc;
+}

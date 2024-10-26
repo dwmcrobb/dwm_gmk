@@ -28,14 +28,14 @@
 #include <string>
 
 #include "dwm_gmk.h"
+#include "DwmGmkMkfileStack.hh"
 #include "DwmGmkUtils.hh"
 
 extern "C" {
     int plugin_is_GPL_compatible = 1;
 }
 
-std::stack<std::string>  g_thisdirStack;
-std::stack<std::string>  g_thisfileStack;
+Dwm::Gmk::MkfileStack    g_mkfileStack;
 
 //---------------------------------------------------------------------------
 //!  
@@ -49,9 +49,10 @@ int dwm_gmk_setup(const gmk_floc *floc)
     gmk_add_function("dwm_files",       dwm_gmk_files, 0, 2, 0);
     gmk_add_function("dwm_flex",        dwm_gmk_flex, 1, 0, 0);
     gmk_add_function("dwm_fromtop",     dwm_gmk_fromtop, 0, 1, 0);
-    gmk_add_function("dwm_include",     dwm_gmk_include, 1, 1, 0);
+    gmk_add_function("dwm_include",     dwm_gmk_include, 1, 0, 0);
     gmk_add_function("my",              dwm_gmk_my, 1, 1, GMK_FUNC_NOEXPAND);
     gmk_add_function("myns",            dwm_gmk_myns, 0, 1, 0);
+    gmk_add_function("myvn",            dwm_gmk_myvn, 0, 1, 0);
     gmk_add_function("dwm_pwd",         dwm_gmk_pwd, 0, 0, 0);
     gmk_add_function("dwm_relpath",     dwm_gmk_relpath, 2, 2, 0);
     gmk_add_function("dwm_relpwd",      dwm_gmk_relpwd, 1, 1, 0);
@@ -68,14 +69,7 @@ int dwm_gmk_setup(const gmk_floc *floc)
     gmk_add_function("dwm_uniqleft",    dwm_gmk_uniqleft, 1, 1, 0);
     gmk_add_function("dwm_uniqright",   dwm_gmk_uniqright, 1, 1, 0);
 
-    std::vector<std::string>  makefiles;
-    if (Dwm::Gmk::GetMakefilesList(makefiles)) {
-      namespace fs = std::filesystem;
-      fs::path  curdir(fs::path(*makefiles.rbegin()).parent_path());
-      curdir = fs::canonical(curdir);
-      g_thisdirStack.push(curdir);
-      g_thisfileStack.push(fs::canonical(*makefiles.rbegin()));
-    }
+    g_mkfileStack.PushCurrent();
     return 1;
 }
 

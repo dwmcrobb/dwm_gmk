@@ -29,8 +29,9 @@
 
 #include "dwm_gmk.h"
 #include "DwmGmkUtils.hh"
+#include "DwmGmkMkfileStack.hh"
 
-extern std::stack<std::string> g_thisdirStack;
+extern Dwm::Gmk::MkfileStack  g_mkfileStack;
 
 namespace fs = std::filesystem;
 
@@ -40,8 +41,8 @@ namespace fs = std::filesystem;
 char *dwm_gmk_fromtop(const char *name, unsigned int argc, char *argv[])
 {
   char  *rel = 0;
-  if ((! Dwm::Gmk::Top().empty()) && (! g_thisdirStack.empty())) {
-    std::string  toPath = g_thisdirStack.top();
+  if ((! Dwm::Gmk::Top().empty()) && (! g_mkfileStack.TopDir().empty())) {
+    std::string  toPath = g_mkfileStack.TopDir();
     if (argc == 1) {
       toPath += '/';
       toPath += argv[0];

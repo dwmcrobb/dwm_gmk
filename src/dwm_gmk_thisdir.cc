@@ -28,28 +28,17 @@ extern "C" {
 }
   
 #include "dwm_gmk.h"
+#include "DwmGmkMkfileStack.hh"
+#include "DwmGmkUtils.hh"
 
 #include <cstring>
-#include <filesystem>
-#include <stack>
-#include <string>
 
-extern std::stack<std::string>  g_thisdirStack;
-
-namespace fs = std::filesystem;
+extern Dwm::Gmk::MkfileStack  g_mkfileStack;
 
 //----------------------------------------------------------------------------
 //!  
 //----------------------------------------------------------------------------
 char *dwm_gmk_thisdir(const char *name, unsigned int argc, char *argv[])
 {
-  char  *rc = 0;
-  if (! g_thisdirStack.empty()) {
-    rc = gmk_alloc(g_thisdirStack.top().size() + 1);
-    if (rc) {
-      rc[g_thisdirStack.top().size()] = 0;
-      strncpy(rc, g_thisdirStack.top().c_str(), g_thisdirStack.top().size());
-    }
-  }
-  return rc;
+  return GmkCopy(g_mkfileStack.TopDir());
 }

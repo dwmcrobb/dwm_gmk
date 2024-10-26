@@ -36,13 +36,13 @@ extern "C" {
 
 #include "dwm_gmk.h"
 #include "DwmGmkUtils.hh"
+#include "DwmGmkMkfileStack.hh"
 
 using namespace std;
 namespace fs = std::filesystem;
 
-extern stack<string>  g_thisdirStack;
-extern stack<string>  g_thisfileStack;
-static set<string>    g_alreadyIncluded;
+extern Dwm::Gmk::MkfileStack  g_mkfileStack;
+static set<string>            g_alreadyIncluded;
 
 //----------------------------------------------------------------------------
 //!  
@@ -68,7 +68,7 @@ char *dwm_gmk_include(const char *name, unsigned int argc, char *argv[])
   if (argc == 1) {
     vector<string>  makefiles;
     Dwm::Gmk::GetMakefilesList(makefiles);
-    string  includedFromDirAbs = g_thisdirStack.top();
+    string  includedFromDirAbs = g_mkfileStack.TopDir();
     vector<string>  includeFiles;
     Dwm::Gmk::ToVector(string_view(argv[0]), includeFiles);
     for (auto includeArg : includeFiles) {
@@ -80,22 +80,20 @@ char *dwm_gmk_include(const char *name, unsigned int argc, char *argv[])
         includePathAbs = includeArg;
       }
       includePathAbs = fs::weakly_canonical(includePathAbs);
-      if (g_alreadyIncluded.find(includePathAbs) == g_alreadyIncluded.end()) {
+    //      if (g_alreadyIncluded.find(includePathAbs) == g_alreadyIncluded.end()) {
         string  includePathDir = fs::path(includePathAbs).parent_path();
         cout << "including " << RelToPwd(includePathAbs) << " from "
-             << RelToPwd(g_thisfileStack.top()) << '\n';
-        g_thisdirStack.push(includePathDir);
-        g_thisfileStack.push(includePathAbs);
+             << RelToPwd(g_mkfileStack.TopFile()) << '\n';
+        g_mkfileStack.Push(includePathAbs);
         string  includeDirective = string("include ") + includePathAbs;
         gmk_floc floc = { __FILE__, __LINE__ };
         gmk_eval(includeDirective.c_str(), &floc);
-        g_thisdirStack.pop();
-        g_thisfileStack.pop();
+        g_mkfileStack.Pop();
         g_alreadyIncluded.insert(includePathAbs);
-      }
-      else {
-        cout << RelToPwd(includePathAbs) << " already included\n";
-      }
+    //      }
+    //      else {
+    //        cout << RelToPwd(includePathAbs) << " already included\n";
+    //      }
       cout.flush();
     }
   }

@@ -28,8 +28,9 @@ OBJFILESNP     = dwm_gmk_bison.lo \
                  dwm_gmk_thisdir.lo \
                  dwm_gmk_uniqleft.lo \
                  dwm_gmk_uniqright.lo \
-                 DwmGmkUtils.lo \
-                 DwmGmkMyVars.lo
+                 DwmGmkMkfileStack.lo \
+                 DwmGmkMyVars.lo \
+                 DwmGmkUtils.lo
 OBJFILES       = $(OBJFILESNP:%.lo=../obj/%.lo)
 shlib_version  = $(shell ../getvers.sh -s)
 

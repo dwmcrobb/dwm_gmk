@@ -11,15 +11,19 @@ OBJFILESNP     = dwm_gmk_bison.lo \
                  dwm_gmk_files.lo \
                  dwm_gmk_flex.lo \
                  dwm_gmk_fromtop.lo \
+                 dwm_gmk_funcs.lo \
                  dwm_gmk_include.lo \
                  dwm_gmk_my.lo \
+                 dwm_gmk_pushpop.lo \
                  dwm_gmk_pwd.lo \
                  dwm_gmk_relpath.lo \
                  dwm_gmk_relpwd.lo \
+                 dwm_gmk_reverse.lo \
                  dwm_gmk_rgxmatch.lo \
                  dwm_gmk_rgxreplace.lo \
                  dwm_gmk_rgxsearch.lo \
                  dwm_gmk_rgxsubst.lo \
+                 dwm_gmk_rotate.lo \
                  dwm_gmk_settop.lo \
                  dwm_gmk_setup.lo \
                  dwm_gmk_sort.lo \

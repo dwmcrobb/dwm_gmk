@@ -166,11 +166,7 @@ char *dwm_gmk_bison(const char *name, unsigned int argc, char *argv[])
     }
     cmdstr += " $<\n";
     rulestr += "\t" + cmdstr;
-    rule = gmk_alloc(rulestr.size() + 1);
-    if (rule) {
-      rule[rulestr.size()] = 0;
-      strncpy(rule, rulestr.c_str(), rulestr.size());
-    }
+    rule = Dwm::Gmk::GmkCopy(rulestr);
   }
   return rule;
 }

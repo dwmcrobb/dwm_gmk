@@ -22,25 +22,19 @@
 //!  \brief dwmgmk GNU make extension function declarations
 //---------------------------------------------------------------------------
 
+
 extern "C" {
     #include <gnumake.h>
     
     extern int plugin_is_GPL_compatible;
 
     int dwm_gmk_setup(const gmk_floc *floc);
-    
     char *dwm_gmk_bison(const char *name, unsigned int argc, char *argv[]);
-    
     char *dwm_gmk_cppdeps(const char *name, unsigned int argc, char *argv[]);
-    
     char *dwm_gmk_curpath(const char *name, unsigned int argc, char *argv[]);
-    
     char *dwm_gmk_files(const char *name, unsigned int argc, char *argv[]);
-    
     char *dwm_gmk_flex(const char *name, unsigned int argc, char *argv[]);
-    
     char *dwm_gmk_fromtop(const char *name, unsigned int argc, char *argv[]);
-    
     char *dwm_gmk_include(const char *name, unsigned int argc, char *argv[]);
 
     //-----------------------------------------------------------------------
@@ -67,32 +61,39 @@ extern "C" {
     //-----------------------------------------------------------------------
     char *dwm_gmk_myvn(const char *name, unsigned int argc, char *argv[]);
     
+    char *dwm_gmk_popb(const char *name, unsigned int argc, char *argv[]);
+    char *dwm_gmk_popf(const char *name, unsigned int argc, char *argv[]);
+    char *dwm_gmk_push(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_pwd(const char *name, unsigned int argc, char *argv[]);
-    
     char *dwm_gmk_relpath(const char *name, unsigned int argc, char *argv[]);
-    
     char *dwm_gmk_relpwd(const char *name, unsigned int argc, char *argv[]);
-    
+    char *dwm_gmk_reverse(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_rgxmatch(const char *name, unsigned int argc, char *argv[]);
-    
     char *dwm_gmk_rgxreplace(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_rgxsearch(const char *name, unsigned int argc, char *argv[]);
-    
     char *dwm_gmk_rgxsubst(const char *name, unsigned int argc, char *argv[]);
-    
+    char *dwm_gmk_rotl(const char *name, unsigned int argc, char *argv[]);
+    char *dwm_gmk_rotr(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_settop(const char *name, unsigned int argc, char *argv[]);
-    
     char *dwm_gmk_sort(const char *name, unsigned int argc, char *argv[]);
-    
     char *dwm_gmk_subdirs(const char *name, unsigned int argc, char *argv[]);
-    
     char *dwm_gmk_thisdir(const char *name, unsigned int argc, char *argv[]);
-    
     char *dwm_gmk_top(const char *name, unsigned int argc, char *argv[]);
-    
     char *dwm_gmk_totop(const char *name, unsigned int argc, char *argv[]);
-    
     char *dwm_gmk_uniqleft(const char *name, unsigned int argc, char *argv[]);
-    
     char *dwm_gmk_uniqright(const char *name, unsigned int argc, char *argv[]);
+
+  typedef struct {
+    const char    *name;
+    gmk_func_ptr   fn;
+    unsigned int   min_args;
+    unsigned int   max_args;
+    unsigned int   flags;
+  } dwm_gmk_fn_entry;
+
 }
+
+#include <vector>
+
+extern std::vector<dwm_gmk_fn_entry>  dwm_gmk_function_entries;
+

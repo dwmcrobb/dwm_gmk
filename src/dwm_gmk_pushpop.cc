@@ -17,45 +17,57 @@
 //===========================================================================
 
 //---------------------------------------------------------------------------
-//!  \file dwm_gmk_relpath.cc
+//!  \file dwm_gmk_pushpop.cc
 //!  \author Daniel W. McRobb
-//!  \brief dwm_gmk_relpath GNU make extension function
+//!  \brief push and pop GNU make extension functions
 //---------------------------------------------------------------------------
 
 #include "dwm_gmk.h"
-
-#include <cstring>
-#include <filesystem>
-#include <iostream>
-#include <string>
-
 #include "DwmGmkUtils.hh"
-
-namespace fs = std::filesystem;
 
 //----------------------------------------------------------------------------
 //!  
 //----------------------------------------------------------------------------
-char *dwm_gmk_relpath(const char *name, unsigned int argc, char *argv[])
+char *dwm_gmk_push(const char *name, unsigned int argc, char *argv[])
 {
-  char  *rc = 0;
-  if (argc == 2) {
-    if (argv[0] && argv[1]) {
-      std::string  base(argv[0]);
-      if (Dwm::Gmk::IsFile(base)) {
-        base = fs::path(base).parent_path().string();
-        if (base.empty()) {
-          base = "./";
-        }
-      }
-      auto  rel = fs::relative(std::string(argv[1]), base).string();
-      if (! rel.empty()) {
-        rc = Dwm::Gmk::GmkCopy(rel);
-      }
-    }
+  if (argc == 2 && strlen(argv[0]) && strlen(argv[1])) {
+    std::string  expr(std::string(argv[0]) + " += " + argv[1]);
+    gmk_floc  floc;
+    gmk_eval(expr.c_str(), &floc);
+  }
+  return nullptr;
+}
+
+//----------------------------------------------------------------------------
+//!  
+//----------------------------------------------------------------------------
+char *dwm_gmk_popf(const char *name, unsigned int argc, char *argv[])
+{
+  char  *rc = nullptr;
+  if (argc == 1 && strlen(argv[0])) {
+    std::deque<std::string>  d;
+    Dwm::Gmk::ToDeque(argv[0], d);
+    d.pop_front();
+    std::string  s;
+    Dwm::Gmk::ToString(d, s);
+    rc = Dwm::Gmk::GmkCopy(s);
   }
   return rc;
 }
 
-
-  
+//----------------------------------------------------------------------------
+//!  
+//----------------------------------------------------------------------------
+char *dwm_gmk_popb(const char *name, unsigned int argc, char *argv[])
+{
+  char  *rc = nullptr;
+  if (argc == 1 && strlen(argv[0])) {
+    std::deque<std::string>  d;
+    Dwm::Gmk::ToDeque(argv[0], d);
+    d.pop_back();
+    std::string  s;
+    Dwm::Gmk::ToString(d, s);
+    rc = Dwm::Gmk::GmkCopy(s);
+  }
+  return rc;
+}

@@ -22,9 +22,7 @@
 //!  \brief dwm_gmk_rgxsubst GNU make extension function
 //---------------------------------------------------------------------------
 
-#include <cstring>
 #include <regex>
-#include <string>
 
 #include "dwm_gmk.h"
 #include "DwmGmkUtils.hh"
@@ -36,7 +34,7 @@ char *dwm_gmk_rgxsubst(const char *name, unsigned int argc, char *argv[])
 {
   namespace  rgxflags = std::regex_constants;
   
-  char  *rc = 0;
+  char  *rc = nullptr;
 
   if ((argc == 3) && argv[0] && argv[1] && argv[2]) {
     std::string  rgxstr(argv[0]);
@@ -55,11 +53,7 @@ char *dwm_gmk_rgxsubst(const char *name, unsigned int argc, char *argv[])
         outstr += regex_replace(*word, rgx, fmt);
       }
       if (! outstr.empty()) {
-        rc = gmk_alloc(outstr.size() + 1);
-        if (rc) {
-          rc[outstr.size()] = 0;
-          strncpy(rc, outstr.c_str(), outstr.size());
-        }
+        rc = Dwm::Gmk::GmkCopy(outstr);
       }
     }
   }

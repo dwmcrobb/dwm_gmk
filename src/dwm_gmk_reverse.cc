@@ -17,42 +17,30 @@
 //===========================================================================
 
 //---------------------------------------------------------------------------
-//!  \file dwm_gmk_totop.cc
+//!  \file dwm_gmk_reverse.cc
 //!  \author Daniel W. McRobb
-//!  \brief dwm_gmk_totop GNU make extension function
+//!  \brief dwm_gmk_reverse GNU make extension function
 //---------------------------------------------------------------------------
-
-#include <filesystem>
 
 #include "dwm_gmk.h"
 #include "DwmGmkUtils.hh"
-#include "DwmGmkMkfileStack.hh"
-
-extern Dwm::Gmk::MkfileStack  g_mkfileStack;
-
-namespace fs = std::filesystem;
 
 //----------------------------------------------------------------------------
 //!  
 //----------------------------------------------------------------------------
-char *dwm_gmk_totop(const char *name, unsigned int argc, char *argv[])         
+char *dwm_gmk_reverse(const char *name, unsigned int argc, char *argv[])
 {
-  char  *rel = nullptr;
-  std::string  thisdir = g_mkfileStack.TopDir();
-  if ((! Dwm::Gmk::Top().empty()) && (! thisdir.empty())) {
-    std::string  fromPath = thisdir;
-    if (argc == 1) {
-      fromPath += '/';
-      fromPath += argv[0];
-    }
-    fromPath = fs::weakly_canonical(fromPath);
-    if (Dwm::Gmk::IsFile(fromPath)) {
-      fromPath = fs::path(fromPath).parent_path();
-    }
-    std::string  relPath = fs::proximate(Dwm::Gmk::Top(), fromPath);
-    if (! relPath.empty()) {
-      rel = Dwm::Gmk::GmkCopy(relPath);
+  char  *rc = 0;
+  if (argc == 1) {
+    std::string_view  sv(argv[0]);
+    std::vector<std::string>  v;
+    if (Dwm::Gmk::ToVector(sv, v)) {
+      std::reverse(v.begin(), v.end());
+      std::string  s;
+      if (Dwm::Gmk::ToString(v, s)) {
+        rc = Dwm::Gmk::GmkCopy(s);
+      }
     }
   }
-  return rel;
+  return rc;
 }

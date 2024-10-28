@@ -40,5 +40,5 @@ extern Dwm::Gmk::MkfileStack  g_mkfileStack;
 //----------------------------------------------------------------------------
 char *dwm_gmk_thisdir(const char *name, unsigned int argc, char *argv[])
 {
-  return GmkCopy(g_mkfileStack.TopDir());
+  return Dwm::Gmk::GmkCopy(g_mkfileStack.TopDir());
 }

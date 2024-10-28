@@ -22,10 +22,8 @@
 //!  \brief dwm_gmk_fromtop GNU make extension function
 //---------------------------------------------------------------------------
 
-#include <cstring>
 #include <filesystem>
 #include <iostream>
-#include <stack>
 
 #include "dwm_gmk.h"
 #include "DwmGmkUtils.hh"
@@ -49,10 +47,7 @@ char *dwm_gmk_fromtop(const char *name, unsigned int argc, char *argv[])
     }
     std::string  relPath = Dwm::Gmk::RelTop(toPath);
     if (! relPath.empty()) {
-      rel = gmk_alloc(relPath.size() + 1);
-      if (rel) {
-        strncpy(rel, relPath.c_str(), relPath.size());
-      }
+      rel = Dwm::Gmk::GmkCopy(relPath);
     }
   }
   return rel;

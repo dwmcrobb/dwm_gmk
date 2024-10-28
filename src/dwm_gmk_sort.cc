@@ -46,11 +46,7 @@ char *dwm_gmk_sort(const char *name, unsigned int argc, char *argv[])
       std::sort(v.begin(), v.end());
       std::string  s;
       Dwm::Gmk::ToString(v, s);
-      rc = gmk_alloc(s.size() + 1);
-      if (rc) {
-        rc[s.size()] = 0;
-        strncpy(rc, s.c_str(), s.size());
-      }
+      rc = Dwm::Gmk::GmkCopy(s);
     }
   }
   return rc;

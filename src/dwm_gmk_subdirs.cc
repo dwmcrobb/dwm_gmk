@@ -22,10 +22,8 @@
 //!  \brief dwm_gmk_subdirs GNU make extension function
 //---------------------------------------------------------------------------
 
-#include <cstring>
 #include <filesystem>
 #include <regex>
-#include <string>
 
 #include "dwm_gmk.h"
 #include "DwmGmkUtils.hh"
@@ -39,7 +37,7 @@ char *dwm_gmk_subdirs(const char *name, unsigned int argc, char *argv[])
 {
   namespace  rgxflags = std::regex_constants;
   
-  char  *rc = 0;
+  char  *rc = nullptr;
   std::string  dirPath, rgxstr;
 
   if ((argc >= 1) && argv[0]) {
@@ -61,11 +59,13 @@ char *dwm_gmk_subdirs(const char *name, unsigned int argc, char *argv[])
   std::string  dirsstr;
 
   try {
+    std::string  spc;
     for (auto const & dirEntry : fs::directory_iterator{dirPath}) {
       if (dirEntry.is_directory()) {
         std::string  dirName = dirEntry.path().filename().string();
         if (regex_match(dirName, sm, rgx)) {
-          dirsstr += dirName + ' ';
+          dirsstr += spc + dirName;
+          spc = " ";
         }
       }
     }
@@ -74,11 +74,7 @@ char *dwm_gmk_subdirs(const char *name, unsigned int argc, char *argv[])
   }
   
   if (! dirsstr.empty()) {
-    rc = gmk_alloc(dirsstr.size());
-    rc[dirsstr.size() - 1] = '\0';
-    if (rc) {
-      strncpy(rc, dirsstr.c_str(), dirsstr.size() - 1);
-    }
+    rc = Dwm::Gmk::GmkCopy(dirsstr);
   }
   return rc;
 }

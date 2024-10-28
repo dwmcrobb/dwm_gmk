@@ -4,10 +4,8 @@ myfile_s := $(myfile)
 include ../Makefile.vars
 myfile := $(myfile_s)
 
-$(myns tests)
-$(info myns $(myns))
+$(call myns)
 $(myns puppy)
-$(info myns $(myns))
 
 origfile = $(myfile)
 $(my foo2 = $(origfile))
@@ -17,11 +15,38 @@ origfile = kitten
 
 tests:: test_my test_relpath test_files test_sort test_subdirs test_rgxmatch \
         test_rgxsearch test_rgxreplace test_rgxsubst test_bison1 test_bison2 \
-	test_bison3 test_flex1 test_flex2
+	test_bison3 test_flex1 test_flex2 test_reverse test_pop test_rotate
+
+test_rotate::
+	@[ "$(dwm_rotl a b c d e,2)" = "c d e a b" ] || exit
+	@[ "$(dwm_rotr a b c d e,2)" = "d e a b c" ] || exit
+	@[ "$(dwm_rotl a b c d e,7)" = "c d e a b" ] || exit
+	@[ "$(dwm_rotr a b c d e,7)" = "d e a b c" ] || exit
+	@[ "$(dwm_rotl a b c d e,5)" = "a b c d e" ] || exit
+	@[ "$(dwm_rotr a b c d e,5)" = "a b c d e" ] || exit
+	@[ "$(dwm_rotl a b c d e,0)" = "a b c d e" ] || exit
+	@[ "$(dwm_rotr a b c d e,0)" = "a b c d e" ] || exit
+	@[ "$(dwm_rotl a b c d e)" = "b c d e a" ] || exit
+	@[ "$(dwm_rotr a b c d e)" = "e a b c d" ] || exit
+	@echo rotate tests passed
+
+test_reverse::
+	@[ "$(dwm_reverse a b c d e)" = "e d c b a" ] || exit
+	@echo reverse tests passed
+
+test_pop::
+	@[ "$(dwm_popf a b c d e)" = "b c d e" ] || exit
+	@[ "$(dwm_popb a b c d e)" = "a b c d" ] || exit
+	@echo pop tests passed
 
 test_my::
 	@[ "$(my foo2)" = "kitten" ] || exit
 	@[ "$(my foo3)" = "$(myfile)" ] || exit
+	@[ $(words $(myvn puppy)) -eq 2 ] || exit
+	@[ "$(myvn puppy)" = "foo2 foo3" ] || exit
+	@[ $(words $(myvn )) -eq 2 ] || exit
+	@[ "$(myvn )" = "puppy.foo2 puppy.foo3" ] || exit
+	@[ $(words $(dwm_funcs)) -eq 32 ] || exit
 	@echo my tests passed
 
 test_relpath::
@@ -35,7 +60,7 @@ test_relpath::
 	@echo relpath tests passed
 
 test_files::
-	@[ "$(dwm_files $(dwm_thisdir ),Makefile)" = Makefile ] || exit
+	@[ "$(dwm_files $(dwm_thisdir ),Makefile)" = "Makefile" ] || exit
 	@[ $(dwm_files $(dwm_thisdir )/../src,dwm_gmk_files\.cc) = dwm_gmk_files.cc ] || exit
 	@[ -n "$(dwm_files $(dwm_thisdir )/../src,.+\.cc)" ] || exit
 	@[ -z "$(dwm_files .,Make\.ile)" ] || exit
@@ -72,7 +97,7 @@ test_rgxsearch::
 	@[ "$(dwm_rgxsearch (d).+,dwm)" = "dwm d" ] || exit
 	@echo rgxsearch tests passed
 
-$(info strawberry $(dwm_rgxsearch r,strawberry))
+# $(info strawberry $(dwm_rgxsearch r,strawberry))
 
 test_rgxreplace::
 	@[ "$(dwm_rgxreplace a|e|i|o|u,[$$&],Quick brown fox)" = "Q[u][i]ck br[o]wn f[o]x" ] || exit
@@ -191,10 +216,8 @@ test_uniqright::
 	@[ "$(dwm_uniqright a b d d b a)" = "d b a" ] || exit
 	@echo uniqright tests passed
 
-$(info Makefile thisdir $(dwm_thisdir ))
+# $(info Makefile thisdir $(dwm_thisdir ))
 
-$(info top $(dwm_top ))
-$(info thisdir $(dwm_thisdir ))
-$(info thisdir $(dwm_thisdir))
-$(info $(dwm_thisdirabs ))
+# $(info top $(dwm_top ))
+# $(info thisdir $(dwm_thisdir ))
 # $(info $(from_top ))

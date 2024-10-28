@@ -66,11 +66,14 @@ char *dwm_gmk_files(const char *name, unsigned int argc, char *argv[])
   std::string  filesstr;
 
   try {
+    std::string  spc;
     for (auto const & dirEntry : fs::directory_iterator{dirPath}) {
       if (Dwm::Gmk::IsFile(dirEntry.path())) {
         std::string  fileName = dirEntry.path().filename().string();
         if (regex_match(fileName, sm, rgx)) {
-          filesstr += fileName + ' ';
+          filesstr += spc;
+          filesstr += fileName;
+          spc = " ";
         }
       }
     }
@@ -79,11 +82,7 @@ char *dwm_gmk_files(const char *name, unsigned int argc, char *argv[])
   }
   
   if (! filesstr.empty()) {
-    rc = gmk_alloc(filesstr.size());
-    rc[filesstr.size() - 1] = '\0';
-    if (rc) {
-      strncpy(rc, filesstr.c_str(), filesstr.size() - 1);
-    }
+    rc = Dwm::Gmk::GmkCopy(filesstr);
   }
   return rc;
 }

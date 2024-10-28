@@ -63,11 +63,7 @@ char *dwm_gmk_cppdeps(const char *name, unsigned int argc, char *argv[])
     }
     rulestr += "$(@D)/$(@F) : |g' > $@ ; [ -s $@ ] || \\\n";
     rulestr += "rm -f $@\n";
-    rule = gmk_alloc(rulestr.size() + 1);
-    if (rule) {
-      rule[rulestr.size()] = 0;
-      strncpy(rule, rulestr.c_str(), rulestr.size());
-    }
+    rule = Dwm::Gmk::GmkCopy(rulestr);
   }
   return rule;
 }

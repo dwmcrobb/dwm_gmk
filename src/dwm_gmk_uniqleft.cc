@@ -22,12 +22,6 @@
 //!  \brief dwm_gmk_uniqleft GNU make extension function
 //---------------------------------------------------------------------------
 
-extern "C" {
-  #include <sys/param.h>
-  #include <unistd.h>
-}
-
-#include <cstring>
 #include <set>
 
 #include "dwm_gmk.h"
@@ -38,7 +32,7 @@ extern "C" {
 //----------------------------------------------------------------------------
 char *dwm_gmk_uniqleft(const char *name, unsigned int argc, char *argv[])
 {
-  char  *rc = 0;
+  char  *rc = nullptr;
   if (argc == 1) {
     std::string_view  sv(argv[0]);
     std::vector<std::string>  v;
@@ -53,11 +47,7 @@ char *dwm_gmk_uniqleft(const char *name, unsigned int argc, char *argv[])
       }
       std::string  s;
       Dwm::Gmk::ToString(rv, s);
-      rc = gmk_alloc(s.size() + 1);
-      if (rc) {
-        rc[s.size()] = 0;
-        strncpy(rc, s.c_str(), s.size());
-      }
+      rc = Dwm::Gmk::GmkCopy(s);
     }
   }
   return rc;

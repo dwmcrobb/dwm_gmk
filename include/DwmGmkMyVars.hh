@@ -1,6 +1,6 @@
 #include <shared_mutex>
 #include <string>
-#include <unordered_map>
+#include <map>
 
 namespace Dwm {
 
@@ -29,12 +29,12 @@ namespace Dwm {
         bool         expand;
       } VarData;
 
-      using  PerNamespaceMap = std::unordered_map<std::string,VarData>;
+      using  PerNamespaceMap = std::map<std::string,VarData>;
       using  Namespace = std::string;
 
-      mutable std::shared_mutex                      _mtx;
-      std::unordered_map<std::string,std::string>    _namespaces;
-      std::unordered_map<Namespace,PerNamespaceMap>  _vars;
+      mutable std::shared_mutex            _mtx;
+      std::map<std::string,std::string>    _namespaces;
+      std::map<Namespace,PerNamespaceMap>  _vars;
 
       static std::string GetExprRHS(const std::vector<std::string> & args);
     };

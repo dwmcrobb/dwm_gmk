@@ -106,6 +106,30 @@ namespace Dwm {
     //------------------------------------------------------------------------
     //!  
     //------------------------------------------------------------------------
+    bool ToDeque(const std::string_view & s, std::deque<string> & d,
+                 char sep)
+    {
+      d.clear();
+      string::size_type  idx = 0;
+      string::size_type  nextIdx;
+      do {
+        nextIdx = s.find_first_of(sep, idx);
+        if (nextIdx != s.npos) {
+          if (nextIdx > idx) {
+            d.push_back(string(s.substr(idx, nextIdx - idx)));
+          }
+          idx = nextIdx + 1;
+        }
+      } while (nextIdx != s.npos);
+      if (s.length() > idx) {
+        d.push_back(string(s.substr(idx, s.length() - idx)));
+      }
+      return (! d.empty());
+    }
+    
+    //------------------------------------------------------------------------
+    //!  
+    //------------------------------------------------------------------------
     bool ToString(const std::vector<string> & v, std::string & s, char sep)
     {
       s.clear();
@@ -120,6 +144,23 @@ namespace Dwm {
       return (! s.empty());
     }
 
+    //------------------------------------------------------------------------
+    //!  
+    //------------------------------------------------------------------------
+    bool ToString(const std::deque<string> & d, std::string & s, char sep)
+    {
+      s.clear();
+      if (! d.empty()) {
+        auto  it = d.cbegin();
+        s += *it++;
+        for ( ; it != d.cend(); ++it) {
+          s += sep;
+          s += *it;
+        }
+      }
+      return (! s.empty());
+    }
+    
     //------------------------------------------------------------------------
     //!  
     //------------------------------------------------------------------------

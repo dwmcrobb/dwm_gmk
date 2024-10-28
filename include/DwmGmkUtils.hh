@@ -23,6 +23,7 @@
 //---------------------------------------------------------------------------
 
 #include <filesystem>
+#include <deque>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -45,16 +46,33 @@ namespace Dwm {
     bool ToVector(const std::string_view & s, std::vector<std::string> & v,
                   char sep = ' ');
 
+    //------------------------------------------------------------------------
+    //!  
+    //------------------------------------------------------------------------
     bool ToVector(const std::string_view & s, std::vector<std::string> & v,
                   const std::string & rgxstr);
+
+    //------------------------------------------------------------------------
+    //!  Splits @c s on separator @c sep and puts each segment into @c d.
+    //!  Returns true if the resulting @c d is non-empty.
+    //------------------------------------------------------------------------
+    bool ToDeque(const std::string_view & s, std::deque<std::string> & v,
+                 char sep = ' ');
     
     //------------------------------------------------------------------------
-    //!  Populates @c s by concatenating the elements of @c with @c sep as
+    //!  Populates @c s by concatenating the elements of @c v with @c sep as
     //!  a separator.  Returns true if the resulting @c s is non-empty.
     //------------------------------------------------------------------------
     bool ToString(const std::vector<std::string> & v, std::string & s,
                   char sep = ' ');
 
+    //------------------------------------------------------------------------
+    //!  Populates @c s by concatenating the elements of @c d with @c sep as
+    //!  a separator.  Returns true if the resulting @c s is non-empty.
+    //------------------------------------------------------------------------
+    bool ToString(const std::deque<std::string> & d, std::string & s,
+                  char sep = ' ');
+    
     //------------------------------------------------------------------------
     //!  
     //------------------------------------------------------------------------

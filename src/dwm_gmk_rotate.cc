@@ -17,63 +17,46 @@
 //===========================================================================
 
 //---------------------------------------------------------------------------
-//!  \file dwm_gmk_my.cc
+//!  \file dwm_gmk_rotate.cc
 //!  \author Daniel W. McRobb
-//!  \brief dwm_gmk_my GNU make extension function
+//!  \brief dwm_gmk rotate GNU make extension functions
 //---------------------------------------------------------------------------
 
-#include <algorithm>
-#include <cstdlib>
-#include <cstring>
 #include <iostream>
-#include <map>
 
 #include "dwm_gmk.h"
-#include "DwmGmkMyVars.hh"
 #include "DwmGmkUtils.hh"
 
-using namespace std;
-
-static Dwm::Gmk::MyVars  g_myVars;
-
 //----------------------------------------------------------------------------
 //!  
 //----------------------------------------------------------------------------
-char *dwm_gmk_myns(const char *name, unsigned int argc, char *argv[])
+char *dwm_gmk_rotl(const char *name, unsigned int argc, char *argv[])
 {
   char  *rc = nullptr;
-  if (argc == 1) {
-    if (strlen(argv[0])) {
-      char  *ns = gmk_expand(argv[0]);
-      if (ns) {
-        g_myVars.SetNamespace(ns);
-        gmk_floc  floc;
-        string  toEval(string("myns := ") + g_myVars.GetNamespaceString());
-        gmk_eval(toEval.c_str(), &floc);
+  size_t  pos = 1;
+  if (argc > 0) {
+    std::string_view  sv(argv[0]);
+    std::vector<std::string>  v;
+    if (Dwm::Gmk::ToVector(sv, v)) {
+      if (argc > 1) {
+        try {
+          pos = std::stoul(argv[1]);
+        }
+        catch (...) {
+          std::cerr << "dwm_rotl: second argument " << argv[1]
+                    << " is not integer\n";
+          return nullptr;
+        }
       }
-    }
-    else {
-      rc = g_myVars.GetNamespace();
-    }
-  }
-  return rc;
-}
-
-//----------------------------------------------------------------------------
-//!  
-//----------------------------------------------------------------------------
-char *dwm_gmk_my(const char *name, unsigned int argc, char *argv[])
-{
-  char  *rc = nullptr;
-  if ((argc == 1) && argv[0]) {
-    vector<string>  v;
-    if (Dwm::Gmk::ToVector(argv[0], v, "\\s+")) {
-      if (v.size() == 1) {
-        rc = g_myVars.GetVarValue(v[0]);
+      if (pos && (pos > v.size())) {
+        pos %= v.size();
       }
-      else if (v.size() >= 3) {
-        g_myVars.SetVarValue(v);
+      if (pos) {
+        std::rotate(v.begin(), v.begin() + pos, v.end());
       }
+      std::string  s;
+      Dwm::Gmk::ToString(v, s);
+      rc = Dwm::Gmk::GmkCopy(s.c_str());
     }
   }
   return rc;
@@ -82,15 +65,34 @@ char *dwm_gmk_my(const char *name, unsigned int argc, char *argv[])
 //----------------------------------------------------------------------------
 //!  
 //----------------------------------------------------------------------------
-char *dwm_gmk_myvn(const char *name, unsigned int argc, char *argv[])
+char *dwm_gmk_rotr(const char *name, unsigned int argc, char *argv[])
 {
   char  *rc = nullptr;
-  string  ns(argv[0]);
-  if ((argc == 0) || ns.empty()) {
-    rc = g_myVars.GetVarNames();
-  }
-  else if ((argc == 1) && argv[0]) {
-    rc = g_myVars.GetVarNames(argv[0]);
+  size_t  pos = 1;
+  if (argc > 0) {
+    std::string_view  sv(argv[0]);
+    std::vector<std::string>  v;
+    if (Dwm::Gmk::ToVector(sv, v)) {
+      if (argc > 1) {
+        try {
+          pos = std::stoul(argv[1]);
+        }
+        catch (...) {
+          std::cerr << "dwm_rotl: second argument " << argv[1]
+                    << " is not integer\n";
+          return nullptr;
+        }
+      }
+      if (pos && (pos > v.size())) {
+        pos %= v.size();
+      }
+      if (pos) {
+        std::rotate(v.rbegin(), v.rbegin() + pos, v.rend());
+      }
+      std::string  s;
+      Dwm::Gmk::ToString(v, s);
+      rc = Dwm::Gmk::GmkCopy(s.c_str());
+    }
   }
   return rc;
 }

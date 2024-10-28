@@ -28,10 +28,9 @@ extern "C" {
 }
   
 #include "dwm_gmk.h"
+#include "DwmGmkUtils.hh"
 
-#include <cstring>
 #include <filesystem>
-#include <string>
 
 namespace fs = std::filesystem;
 
@@ -43,11 +42,7 @@ char *dwm_gmk_curpath(const char *name, unsigned int argc, char *argv[])
   char  *rc = 0;
   std::string  curPath = fs::current_path();
   if (! curPath.empty()) {
-    rc = gmk_alloc(curPath.size() + 1);
-    if (rc) {
-      rc[curPath.size()] = 0;
-      strncpy(rc, curPath.c_str(), curPath.size());
-    }
+    rc = Dwm::Gmk::GmkCopy(curPath);
   }
   return rc;
 }

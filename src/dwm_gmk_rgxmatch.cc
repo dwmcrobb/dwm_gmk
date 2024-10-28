@@ -22,12 +22,11 @@
 //!  \brief dwm_gmk_rgxmatch GNU make extension function
 //---------------------------------------------------------------------------
 
-#include <cstring>
 #include <filesystem>
 #include <regex>
-#include <string>
 
 #include "dwm_gmk.h"
+#include "DwmGmkUtils.hh"
 
 namespace fs = std::filesystem;
 
@@ -56,11 +55,7 @@ char *dwm_gmk_rgxmatch(const char *name, unsigned int argc, char *argv[])
       }
     }
     if (! outstr.empty()) {
-      rc = gmk_alloc(outstr.size() + 1);
-      if (rc) {
-        rc[outstr.size()] = 0;
-        strncpy(rc, outstr.c_str(), outstr.size());
-      }
+      rc = Dwm::Gmk::GmkCopy(outstr);
     }
   }
   return rc;

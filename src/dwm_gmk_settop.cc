@@ -27,7 +27,6 @@
 
 #include <filesystem>
 #include <iostream>
-#include <string>
 
 using namespace std;
 namespace fs = std::filesystem;
@@ -43,7 +42,7 @@ char *dwm_gmk_settop(const char *name, unsigned int argc, char *argv[])
     Dwm::Gmk::SetTop(mkfile.parent_path());
     gmk_eval(std::string("TOP := " + Dwm::Gmk::Top()).c_str(), nullptr);
   }
-  return 0;
+  return nullptr;
 }
 
 //----------------------------------------------------------------------------
@@ -51,13 +50,10 @@ char *dwm_gmk_settop(const char *name, unsigned int argc, char *argv[])
 //----------------------------------------------------------------------------
 char *dwm_gmk_top(const char *name, unsigned int argc, char *argv[])         
 {
-  char  *top = 0;
+  char  *top = nullptr;
   std::string  topstr = Dwm::Gmk::Top();
   if (! topstr.empty()) {
-    top = gmk_alloc(topstr.size() + 1);
-    if (top) {
-      strncpy(top, topstr.c_str(), topstr.size());
-    }
+    top = Dwm::Gmk::GmkCopy(topstr);
   }
   return top;
 }

@@ -22,11 +22,10 @@
 //!  \brief dwm_gmk_rgxreplace GNU make extension function
 //---------------------------------------------------------------------------
 
-#include <cstring>
 #include <regex>
-#include <string>
 
 #include "dwm_gmk.h"
+#include "DwmGmkUtils.hh"
 
 //----------------------------------------------------------------------------
 //!  
@@ -44,11 +43,7 @@ char *dwm_gmk_rgxreplace(const char *name, unsigned int argc, char *argv[])
     std::regex   rgx(rgxstr, rgxflags::ECMAScript|rgxflags::optimize);
     std::string  outstr = regex_replace(text, rgx, fmt);
     if (! outstr.empty()) {
-      rc = gmk_alloc(outstr.size() + 1);
-      if (rc) {
-        rc[outstr.size()] = 0;
-        strncpy(rc, outstr.c_str(), outstr.size());
-      }
+      rc = Dwm::Gmk::GmkCopy(outstr);
     }
   }
   return rc;

@@ -22,12 +22,6 @@
 //!  \brief dwm_gmk_uniqright GNU make extension function
 //---------------------------------------------------------------------------
 
-extern "C" {
-  #include <sys/param.h>
-  #include <unistd.h>
-}
-
-#include <cstring>
 #include <set>
 
 #include "dwm_gmk.h"
@@ -54,11 +48,7 @@ char *dwm_gmk_uniqright(const char *name, unsigned int argc, char *argv[])
       reverse(rv.begin(), rv.end());
       std::string  s;
       Dwm::Gmk::ToString(rv, s);
-      rc = gmk_alloc(s.size() + 1);
-      if (rc) {
-        rc[s.size()] = 0;
-        strncpy(rc, s.c_str(), s.size());
-      }
+      rc = Dwm::Gmk::GmkCopy(s);
     }
   }
   return rc;

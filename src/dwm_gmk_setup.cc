@@ -42,34 +42,14 @@ Dwm::Gmk::MkfileStack    g_mkfileStack;
 //---------------------------------------------------------------------------
 int dwm_gmk_setup(const gmk_floc *floc)
 {
-    gmk_add_function("dwm_bison",       dwm_gmk_bison, 1, 0, 0);
-    gmk_add_function("dwm_cppdeps",     dwm_gmk_cppdeps, 4, 5, 0);
-    gmk_add_function("dwm_curpath",     dwm_gmk_curpath, 0, 0, 0);
-    gmk_add_function("dwm_cwd",         dwm_gmk_curpath, 0, 0, 0);
-    gmk_add_function("dwm_files",       dwm_gmk_files, 0, 2, 0);
-    gmk_add_function("dwm_flex",        dwm_gmk_flex, 1, 0, 0);
-    gmk_add_function("dwm_fromtop",     dwm_gmk_fromtop, 0, 1, 0);
-    gmk_add_function("dwm_include",     dwm_gmk_include, 1, 0, 0);
-    gmk_add_function("my",              dwm_gmk_my, 1, 1, GMK_FUNC_NOEXPAND);
-    gmk_add_function("myns",            dwm_gmk_myns, 0, 1, 0);
-    gmk_add_function("myvn",            dwm_gmk_myvn, 0, 1, 0);
-    gmk_add_function("dwm_pwd",         dwm_gmk_pwd, 0, 0, 0);
-    gmk_add_function("dwm_relpath",     dwm_gmk_relpath, 2, 2, 0);
-    gmk_add_function("dwm_relpwd",      dwm_gmk_relpwd, 1, 1, 0);
-    gmk_add_function("dwm_rgxmatch",    dwm_gmk_rgxmatch, 2, 2, 0);
-    gmk_add_function("dwm_rgxreplace",  dwm_gmk_rgxreplace, 3, 3, 0);
-    gmk_add_function("dwm_rgxsearch",   dwm_gmk_rgxsearch, 2, 2, 0);
-    gmk_add_function("dwm_rgxsubst",    dwm_gmk_rgxsubst, 3, 3, 0);
-    gmk_add_function("dwm_settop",      dwm_gmk_settop, 0, 1, 0);
-    gmk_add_function("dwm_sort",        dwm_gmk_sort, 1, 1, 0);
-    gmk_add_function("dwm_subdirs",     dwm_gmk_subdirs, 0, 2, 0);
-    gmk_add_function("dwm_thisdir",     dwm_gmk_thisdir, 0, 0, 0);
-    gmk_add_function("dwm_top",         dwm_gmk_top, 0, 0, 0);
-    gmk_add_function("dwm_totop",       dwm_gmk_totop, 0, 1, 0);
-    gmk_add_function("dwm_uniqleft",    dwm_gmk_uniqleft, 1, 1, 0);
-    gmk_add_function("dwm_uniqright",   dwm_gmk_uniqright, 1, 1, 0);
-
-    g_mkfileStack.PushCurrent();
-    return 1;
+  std::string  dwm_funcs("dwm_funcs :=");
+  for (auto & fn : dwm_gmk_function_entries) {
+    gmk_add_function(fn.name, fn.fn, fn.min_args, fn.max_args, fn.flags);
+    dwm_funcs += ' ';
+    dwm_funcs += fn.name;
+  }
+  gmk_eval(dwm_funcs.c_str(), floc);
+  g_mkfileStack.PushCurrent();
+  return 1;
 }
 

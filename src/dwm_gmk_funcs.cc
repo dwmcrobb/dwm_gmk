@@ -13,6 +13,7 @@ std::vector<dwm_gmk_fn_entry>  dwm_gmk_function_entries = {
   { "dwm_flex",       dwm_gmk_flex,       1, 0, GMK_FUNC_DEFAULT  },
   { "dwm_fromtop",    dwm_gmk_fromtop,    0, 1, GMK_FUNC_DEFAULT  },
   { "dwm_include",    dwm_gmk_include,    1, 0, GMK_FUNC_DEFAULT  },
+  { "dwm_my",         dwm_gmk_my,         1, 1, GMK_FUNC_NOEXPAND },
   { "my",             dwm_gmk_my,         1, 1, GMK_FUNC_NOEXPAND },
   { "myns",           dwm_gmk_myns,       0, 1, GMK_FUNC_DEFAULT  },
   { "myvn",           dwm_gmk_myvn,       0, 1, GMK_FUNC_DEFAULT  },

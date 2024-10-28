@@ -9,14 +9,18 @@
 .Nm dwm_files ,
 .Nm dwm_flex ,
 .Nm dwm_fromtop ,
+.Nm dwm_funcs ,
 .Nm dwm_include ,
 .Nm dwm_pwd ,
 .Nm dwm_relpath ,
 .Nm dwm_relpwd ,
+.Nm dwm_reverse ,
 .Nm dwm_rgxmatch ,
 .Nm dwm_rgxreplace ,
 .Nm dwm_rgxsearch ,
 .Nm dwm_rgxsubst ,
+.Nm dwm_rotl ,
+.Nm dwm_rotr ,
 .Nm dwm_settop ,
 .Nm dwm_sort ,
 .Nm dwm_subdirs ,
@@ -24,7 +28,8 @@
 .Nm dwm_top ,
 .Nm dwm_totop ,
 .Nm dwm_uniqleft ,
-.Nm dwm_uniqright
+.Nm dwm_uniqright ,
+.Nm dwm_my
 .Nd GNU make extensions
 .Sh LIBRARY
 .Lb dwm_gmk.so
@@ -40,13 +45,20 @@ $(dwm_files directory_path,regexp)
 $(eval $(dwm_flex flex_source_file[,flex_args]))
 $(dwm_fromtop\ )                                                     
 $(dwm_fromtop path)
+$(dwm_funcs\ )
 $(call dwm_include,filename)
+$(dwm_my expression)
+$(my expression)
+$(myns name)
 $(dwm_pwd\ )
 $(dwm_relpath from,to)
+$(dwm_reverse text)
 $(dwm_rgxmatch\ regexp,text)
 $(dwm_rgxreplace\ regexp,format,text)
 $(dwm_rgxsearch\ regexp,text)
 $(dwm_rgxsubst\ regexp,format,text)
+$(dwm_rotl text)
+$(dwm_rotr text)
 $(dwm_settop\ )
 $(dwm_sort text)
 $(dwm_subdirs\ )

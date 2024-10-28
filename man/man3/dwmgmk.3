@@ -166,6 +166,15 @@ which is equivalent to:
 .Pp
 .Dl $(dwm_fromtop $(dwm_thisdir ))
 .Ed
+.Ss dwm_include
+.Bd -literal
+Usage: $(dwm_include files...)
+.Be
+Similar to GNU make's built-in \fIinclude\fR directive, but will push
+each included file onto an internal stack while it is being processed and
+pop it from the stack when done.  This allows
+.Sx dwm_thisdir
+to continue to work correctly after including a file.
 .Ss dwm_pwd
 Usage: $(dwm_pwd\ )
 .Pp
@@ -200,8 +209,9 @@ Usage: $(dwm_rgxsubst\ regexp,format,text)
 Returns a string where each instance of the regular expression \fIregexp\fR
 in each word of \fItest\fR is replaced with \fIformat\fR.  Note that
 \fIregexp\fR is an ECMAScript regular expression.  Under the hood, this
-function uses std::regex_replace() from the standard C++ library, executing
-it on each word in \fItext\fR.
+function uses std::regex_replace() from the standard C++ library,
+executing it on each word in \fItext\fR.  Note that the escaped '$1' is
+due to the C++ library using '$' instead of '\\' for backreferences.
 .Pp
 Example:
 .Dl $(dwm_rgxsubst (.+)\\.cc$$,$$1.o,foo.cc bar.cc foobar.cc))
@@ -210,6 +220,37 @@ Would return:
 .Dl foo.o bar.o foobar.o
 .Ss dwm_relpwd
 Usage: $(dwm_relpwd path)
+.Ss dwm_reverse
+Usage: $(dwm_reverse text)
+.Pp
+Returns the words in \fItext\fR in reverse order.
+.Pp
+Example:
+.Dl $(dwm_reverse cat dog cow horse hen)
+.Pp
+Would return:
+.Dl hen horse cow dog cat
+.Ss dwm_rotl
+Usage: $(dwm_rotl text[,count])
+.Pp
+Returns the words in \fItext\fR rotated to the left \fIcount\fR positions.  If
+\fIcount\fR is not given, 1 will be used.
+.Pp
+Example:
+.Dl $(dwm_rotl cat dog cow horse hen,3)
+.Pp
+Would return:
+.Dl horse hen cat dog cow
+.Ss dwm_rotr
+Usage: $(dwm_rotr text[,positions])
+Returns the words in \fItext\fR rotated to the right \fIcount\fR positions.
+If \fIcount\fR is not given, 1 will be used.
+.Pp
+Example:
+.Dl $(dwm_rotr cat dog cow horse hen,3)
+.Pp
+Would return:
+.Dl cow horse hen cat dog
 .Ss dwm_settop
 Usage: $(dwm_settop\ )
 .Pp

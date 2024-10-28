@@ -1,7 +1,5 @@
 include ../Makefile.vars
 
-$(info PWD $(PWD))
-
 INCS           = -I../include -I/opt/local/include -I/usr/local/include
 LTINSTALL     := ${LIBTOOL} --mode=install ../install-sh
 LTUNINSTALL   := ${LIBTOOL} --quiet --mode=uninstall rm -f
@@ -36,13 +34,29 @@ OBJFILESNP     = dwm_gmk_bison.lo \
                  DwmGmkMyVars.lo \
                  DwmGmkUtils.lo
 OBJFILES       = $(OBJFILESNP:%.lo=../obj/%.lo)
+OBJDEPS        = $(OBJFILESNP:%.lo=deps/%_deps)
 shlib_version  = $(shell ../getvers.sh -s)
 
 ../lib/dwm_gmk.la: ${OBJFILES}
 	@${LIBTOOL} --mode=link --tag=CXX ${CXX} -module -o $@ $^ \
 	  -shared -rpath ${INSTALLPREFIX}/lib -version-info ${shlib_version}
 
-../obj/%.lo: %.cc ../include/dwm_gmk.h
+#  dependency rule
+deps/%_deps: %.cc
+	@echo "making dependencies for $<"
+	@set -e; \
+	${CXX} -MM ${CXXFLAGS} ${INCS} -c $< | \
+	 sed 's/\($*\)\.o[ :]*/..\/obj\/\1.o ..\/obj\/\1.lo $(@D)\/$(@F) : /g' > $@ ; [ -s $@ ] || \
+	 rm -f $@
+
+#  only include dependency makefiles if target is not 'clean' or 'distclean'
+ifneq ($(MAKECMDGOALS),clean)
+ifneq ($(MAKECMDGOALS),distclean)
+-include ${OBJDEPS}
+endif
+endif
+
+../obj/%.lo: %.cc deps/%_deps
 	@${LIBTOOL} --mode=compile --tag=CXX ${CXX} ${CXXFLAGS} \
 	  ${INCS} -c $< -o $@
 

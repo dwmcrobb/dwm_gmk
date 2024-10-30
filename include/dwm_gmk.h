@@ -22,6 +22,7 @@
 //!  \brief dwmgmk GNU make extension function declarations
 //---------------------------------------------------------------------------
 
+#include <vector>
 
 extern "C" {
     #include <gnumake.h>
@@ -29,12 +30,12 @@ extern "C" {
     extern int plugin_is_GPL_compatible;
 
     int dwm_gmk_setup(const gmk_floc *floc);
+    char *dwm_gmk_aliasfn(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_bison(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_cppdeps(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_curpath(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_files(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_flex(const char *name, unsigned int argc, char *argv[]);
-    char *dwm_gmk_fromtop(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_include(const char *name, unsigned int argc, char *argv[]);
 
     //-----------------------------------------------------------------------
@@ -74,12 +75,9 @@ extern "C" {
     char *dwm_gmk_rgxsubst(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_rotl(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_rotr(const char *name, unsigned int argc, char *argv[]);
-    char *dwm_gmk_settop(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_sort(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_subdirs(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_thisdir(const char *name, unsigned int argc, char *argv[]);
-    char *dwm_gmk_top(const char *name, unsigned int argc, char *argv[]);
-    char *dwm_gmk_totop(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_uniqleft(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_uniqright(const char *name, unsigned int argc, char *argv[]);
 
@@ -91,9 +89,21 @@ extern "C" {
     unsigned int   flags;
   } dwm_gmk_fn_entry;
 
+  //  Would be nice if GNU make built-in functions were accessible
+  //  (not static)...
+
+  typedef char *(*builtin_fn_ptr)(char *o, char **argv, const char *funcname);
+
+  typedef struct {
+    const char      *name;
+    unsigned int     min_args;
+    unsigned int     max_args;
+    unsigned int     flags;
+  } dwm_gmk_bi_fn_entry;
+    
+  char *dwm_gmk_call_builtin(const char *name, unsigned int argc,
+                             char *argv[]);
 }
 
-#include <vector>
-
-extern std::vector<dwm_gmk_fn_entry>  dwm_gmk_function_entries;
+extern std::vector<dwm_gmk_fn_entry>     dwm_gmk_function_entries;
 

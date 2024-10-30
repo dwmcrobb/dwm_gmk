@@ -1,0 +1,21 @@
+.head { width: 100%; }
+.Ss .permalink {
+    font-size: 1.2em;
+    color: #0080aa;
+    text-decoration-line: none;
+}
+.Sh .permalink {
+    color: #0080aa;
+    text-decoration-line: none;
+}
+.Sx {
+    color: #0080aa;
+    text-decoration-line: none;
+    font-weight: bold;
+}
+pre {
+    margin-top: 0em;
+}
+p.Pp {
+    margin-block-end: 0em;
+}

@@ -1,21 +1,35 @@
-load /usr/local/lib/dwm_gmk.so(dwm_gmk_setup)
+load ../lib/.libs/dwm_gmk.so(dwm_gmk_setup)
 myfile := $(abspath $(lastword $(MAKEFILE_LIST)))
 myfile_s := $(myfile)
-include ../Makefile.vars
+$(dwm_include ../Makefile.vars)
 myfile := $(myfile_s)
 
-$(call myns)
-$(myns puppy)
+$(dwm_myns puppy)
 
 origfile = $(myfile)
-$(my foo2 = $(origfile))
-$(my foo3 := $(origfile))
+$(dwm_my foo2 = $(origfile))
+$(dwm_my foo3 := $(origfile))
 
 origfile = kitten
 
 tests:: test_my test_relpath test_files test_sort test_subdirs test_rgxmatch \
         test_rgxsearch test_rgxreplace test_rgxsubst test_bison1 test_bison2 \
-	test_bison3 test_flex1 test_flex2 test_reverse test_pop test_rotate
+        test_bison3 test_flex1 test_flex2 test_reverse test_pop test_rotate \
+        test_alias test_uniqleft test_uniqright test_include
+
+test_include::
+	@[ "$(firstword $(dwm_incstack))" = "$(myfile)" ] || exit
+	@[ $(words $(dwm_incstack)) -eq 1 ] || exit
+	@echo include tests passed
+
+test_alias::
+	$(dwm_aliasfn rotl,dwm_rotl)
+	@[ "$(rotl a b c d e,2)" = "c d e a b" ] || exit
+	$(dwm_aliasfn rotr,dwm_rotr)
+	@[ "$(rotr a b c d e,2)" = "d e a b c" ] || exit
+	$(dwm_aliasfn ps,patsubst)
+	@[ "$(ps %.cc,%.hh,foo.cc bar.cc foobar.cc)" = "foo.hh bar.hh foobar.hh" ] || exit
+	@echo alias tests passed
 
 test_rotate::
 	@[ "$(dwm_rotl a b c d e,2)" = "c d e a b" ] || exit
@@ -40,22 +54,22 @@ test_pop::
 	@echo pop tests passed
 
 test_my::
-	@[ "$(my foo2)" = "kitten" ] || exit
-	@[ "$(my foo3)" = "$(myfile)" ] || exit
-	@[ $(words $(myvn puppy)) -eq 2 ] || exit
-	@[ "$(myvn puppy)" = "foo2 foo3" ] || exit
-	@[ $(words $(myvn )) -eq 2 ] || exit
-	@[ "$(myvn )" = "puppy.foo2 puppy.foo3" ] || exit
-	@[ $(words $(dwm_funcs)) -eq 32 ] || exit
+	@[ "$(dwm_my foo2)" = "kitten" ] || exit
+	@[ "$(dwm_my foo3)" = "$(myfile)" ] || exit
+	@[ $(words $(dwm_myvn puppy)) -eq 2 ] || exit
+	@[ "$(dwm_myvn puppy)" = "foo2 foo3" ] || exit
+	@[ $(words $(dwm_myvn )) -eq 2 ] || exit
+	@[ "$(dwm_myvn )" = "puppy.foo2 puppy.foo3" ] || exit
+	@[ $(words $(dwm_funcs)) -eq 29 ] || exit
 	@echo my tests passed
 
 test_relpath::
 	@[ $(dwm_relpath $(dwm_thisdir )/../src,$(dwm_thisdir )) = ../tests ] || exit
 	@[ $(dwm_relpath $(dwm_thisdir ),$(dwm_thisdir )/../src) = ../src ] || exit
-	@[ $(dwm_relpath $(dwm_thisdir ),$(dwm_top )) = .. ] || exit
-	@[ $(dwm_relpath $(dwm_top ),$(dwm_thisdir )) = tests ] || exit
+	@[ $(dwm_relpath $(dwm_thisdir ),$(TOP)) = .. ] || exit
+	@[ $(dwm_relpath $(TOP),$(dwm_thisdir )) = tests ] || exit
 	@[ $(dwm_relpath $(dwm_thisdir ),$(dwm_thisdir )) = . ] || exit
-	@[ $(dwm_relpath $(dwm_thisdir ),$(dwm_top )/src) = ../src ] || exit
+	@[ $(dwm_relpath $(dwm_thisdir ),$(TOP)/src) = ../src ] || exit
 	@[ "/$(dwm_relpath /,$(dwm_curpath ))" = $(shell pwd) ] || exit
 	@echo relpath tests passed
 
@@ -157,6 +171,7 @@ test_bison2::
 	@[ "$(word 16,$(bison_rule2))" = "-o" ] || exit
 	@[ "$(word 17,$(bison_rule2))" = "parser.cc" ] || exit
 	@[ "$(word 18,$(bison_rule2))" = "$$<" ] || exit
+	@echo bison2 tests passed
 
 bison_rule3 = $(dwm_bison parser.y,-d,-o parser.c)
 
@@ -175,6 +190,7 @@ test_bison3::
 	@[ "$(word 16,$(bison_rule3))" = "-o" ] || exit
 	@[ "$(word 17,$(bison_rule3))" = "parser.c" ] || exit
 	@[ "$(word 18,$(bison_rule3))" = "$$<" ] || exit
+	@echo bison3 tests passed
 
 flex_rule1 = $(dwm_flex lexer.lex,-o lexer.cc)
 
@@ -189,6 +205,7 @@ test_flex1::
 	@[ "$(word 12,$(flex_rule1))" = "-o" ] || exit
 	@[ "$(word 13,$(flex_rule1))" = "lexer.cc" ] || exit
 	@[ "$(word 14,$(flex_rule1))" = "$$<" ] || exit
+	@echo flex1 tests passed
 
 flex_rule2 = $(dwm_flex lexer.lex,-o lexer.cc,-d,--tables-file=lexertables)
 
@@ -207,6 +224,7 @@ test_flex2::
 	@[ "$(word 16,$(flex_rule2))" = "lexer.cc" ] || exit
 	@[ "$(word 17,$(flex_rule2))" = "--tables-file=lexertables" ] || exit
 	@[ "$(word 18,$(flex_rule2))" = "$$<" ] || exit
+	@echo flex2 tests passed
 
 test_uniqleft::
 	@[ "$(dwm_uniqleft a b d d b a)" = "a b d" ] || exit

@@ -3,12 +3,12 @@ include ../Makefile.vars
 INCS           = -I../include -I/opt/local/include -I/usr/local/include
 LTINSTALL     := ${LIBTOOL} --mode=install ../install-sh
 LTUNINSTALL   := ${LIBTOOL} --quiet --mode=uninstall rm -f
-OBJFILESNP     = dwm_gmk_bison.lo \
+OBJFILESNP     = dwm_gmk_aliasfn.lo \
+                 dwm_gmk_bison.lo \
                  dwm_gmk_cppdeps.lo \
                  dwm_gmk_curpath.lo \
                  dwm_gmk_files.lo \
                  dwm_gmk_flex.lo \
-                 dwm_gmk_fromtop.lo \
                  dwm_gmk_funcs.lo \
                  dwm_gmk_include.lo \
                  dwm_gmk_my.lo \
@@ -22,11 +22,9 @@ OBJFILESNP     = dwm_gmk_bison.lo \
                  dwm_gmk_rgxsearch.lo \
                  dwm_gmk_rgxsubst.lo \
                  dwm_gmk_rotate.lo \
-                 dwm_gmk_settop.lo \
                  dwm_gmk_setup.lo \
                  dwm_gmk_sort.lo \
                  dwm_gmk_subdirs.lo \
-                 dwm_gmk_totop.lo \
                  dwm_gmk_thisdir.lo \
                  dwm_gmk_uniqleft.lo \
                  dwm_gmk_uniqright.lo \

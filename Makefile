@@ -14,6 +14,7 @@ tests::
 tarprep:: lib/dwm_gmk.la
 	${MAKE} -C src $@
 	${MAKE} -C apps $@
+	${MAKE} -C man/man3 $@
 	${MAKE} -C packaging $@
 
 package: ${OSNAME}-pkg
@@ -34,6 +35,7 @@ linux-pkg: tarprep
 clean::
 	${MAKE} -C src $@
 	${MAKE} -C apps $@
+	${MAKE} -C man/man3 $@
 
 distclean:: clean
 	${MAKE} -C src $@

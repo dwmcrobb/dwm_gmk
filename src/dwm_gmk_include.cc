@@ -64,37 +64,42 @@ static string RelToPwd(const string & p)
 //----------------------------------------------------------------------------
 char *dwm_gmk_include(const char *name, unsigned int argc, char *argv[])
 {
-  char  *rc = 0;
-  if (argc == 1) {
-    vector<string>  makefiles;
-    Dwm::Gmk::GetMakefilesList(makefiles);
-    string  includedFromDirAbs = g_mkfileStack.TopDir();
-    vector<string>  includeFiles;
+  char            *rc = nullptr;
+  bool             verbose = false;
+  vector<string>   includeFiles;
+  if (argc == 2) {
+    if (strcmp(argv[0], "verbose") == 0) {
+      verbose = true;
+    }
+    Dwm::Gmk::ToVector(string_view(argv[1]), includeFiles);
+  }
+  else if (argc == 1) {
     Dwm::Gmk::ToVector(string_view(argv[0]), includeFiles);
-    for (auto includeArg : includeFiles) {
-      string  includePathAbs;
-      if (includeArg.at(0) != '/') {
-        includePathAbs = includedFromDirAbs + '/' + includeArg;
+  }
+  
+  if (argc >= 1) {
+    string  includedFromDirAbs = g_mkfileStack.TopDir();
+    for (auto includeFile : includeFiles) {
+      string  includeFileAbs;
+      if (includeFile.at(0) != '/') {
+        includeFileAbs = includedFromDirAbs + '/' + includeFile;
       }
       else {
-        includePathAbs = includeArg;
+        includeFileAbs = includeFile;
       }
-      includePathAbs = fs::weakly_canonical(includePathAbs);
-    //      if (g_alreadyIncluded.find(includePathAbs) == g_alreadyIncluded.end()) {
-        string  includePathDir = fs::path(includePathAbs).parent_path();
-        cout << "including " << RelToPwd(includePathAbs) << " from "
+      includeFileAbs = fs::weakly_canonical(includeFileAbs);
+      string  includePathDir = fs::path(includeFileAbs).parent_path();
+      if (verbose) {
+        cout << "including " << RelToPwd(includeFileAbs) << " from "
              << RelToPwd(g_mkfileStack.TopFile()) << '\n';
-        g_mkfileStack.Push(includePathAbs);
-        string  includeDirective = string("include ") + includePathAbs;
-        gmk_floc floc = { __FILE__, __LINE__ };
-        gmk_eval(includeDirective.c_str(), &floc);
-        g_mkfileStack.Pop();
-        g_alreadyIncluded.insert(includePathAbs);
-    //      }
-    //      else {
-    //        cout << RelToPwd(includePathAbs) << " already included\n";
-    //      }
-      cout.flush();
+        cout.flush();
+      }
+      g_mkfileStack.Push(includeFileAbs);
+      string  includeDirective = string("include ") + includeFileAbs;
+      gmk_floc floc = { __FILE__, __LINE__ };
+      gmk_eval(includeDirective.c_str(), &floc);
+      g_mkfileStack.Pop();
+      g_alreadyIncluded.insert(includeFileAbs);
     }
   }
   return rc;

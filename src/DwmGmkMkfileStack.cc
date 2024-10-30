@@ -118,7 +118,7 @@ namespace Dwm {
     //------------------------------------------------------------------------
     //!  
     //------------------------------------------------------------------------
-    void MkfileStack::SetIncStackString()
+    void MkfileStack::SetIncStackString() const
     {
       gmk_floc  floc = { __FILE__, __LINE__ };
       gmk_eval(string("dwm_incstack := " + AsString()).c_str(), &floc);

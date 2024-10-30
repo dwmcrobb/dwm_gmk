@@ -22,6 +22,8 @@
 //!  \brief push and pop GNU make extension functions
 //---------------------------------------------------------------------------
 
+#include <cstring>
+
 #include "dwm_gmk.h"
 #include "DwmGmkUtils.hh"
 

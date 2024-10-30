@@ -27,6 +27,7 @@ extern "C" {
 }
 
 #include <cstdlib>
+#include <cstring>
 #include <regex>
 
 #include "DwmGmkUtils.hh"

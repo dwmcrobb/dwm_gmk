@@ -28,6 +28,7 @@ extern "C" {
 
 #include <algorithm>
 #include <iostream>
+#include <mutex>
 
 #include "DwmGmkMyVars.hh"
 #include "DwmGmkMkfileStack.hh"

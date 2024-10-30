@@ -27,6 +27,7 @@ extern "C" {
 
 #include <filesystem>
 #include <iostream>
+#include <mutex>
 
 #include "DwmGmkMkfileStack.hh"
 #include "DwmGmkUtils.hh"
@@ -45,7 +46,7 @@ namespace Dwm {
     {
       string  canon = fs::weakly_canonical(mkfile);
       {
-        unique_lock  lck(_mtx);
+        std::unique_lock  lck(_mtx);
         _stack.push_front(canon);
       }
       SetIncStackString();
@@ -70,7 +71,7 @@ namespace Dwm {
     void MkfileStack::Pop()
     {
       {
-        unique_lock  lck(_mtx);
+        std::unique_lock  lck(_mtx);
         string  top = _stack.front();
         _stack.pop_front();
       }
@@ -83,7 +84,7 @@ namespace Dwm {
     //------------------------------------------------------------------------
     std::string MkfileStack::TopFile() const
     {
-      shared_lock  lck(_mtx);
+      std::shared_lock  lck(_mtx);
       return _stack.front();
     }
       
@@ -92,7 +93,7 @@ namespace Dwm {
     //------------------------------------------------------------------------
     std::string MkfileStack::TopDir() const
     {
-      shared_lock  lck(_mtx);
+      std::shared_lock  lck(_mtx);
       return fs::path(_stack.front()).parent_path();
     }
 
@@ -102,7 +103,7 @@ namespace Dwm {
     std::string MkfileStack::AsString() const
     {
       std::string  s;
-      shared_lock  lck(_mtx);
+      std::shared_lock  lck(_mtx);
       if (! _stack.empty()) {
         auto it = _stack.begin();
         s += *it;

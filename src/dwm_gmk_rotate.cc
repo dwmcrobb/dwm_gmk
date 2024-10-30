@@ -22,6 +22,8 @@
 //!  \brief dwm_gmk rotate GNU make extension functions
 //---------------------------------------------------------------------------
 
+#include <algorithm>
+#include <cstring>
 #include <iostream>
 
 #include "dwm_gmk.h"

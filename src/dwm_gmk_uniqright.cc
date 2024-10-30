@@ -22,6 +22,7 @@
 //!  \brief dwm_gmk_uniqright GNU make extension function
 //---------------------------------------------------------------------------
 
+#include <algorithm>
 #include <set>
 
 #include "dwm_gmk.h"
@@ -45,7 +46,7 @@ char *dwm_gmk_uniqright(const char *name, unsigned int argc, char *argv[])
           rv.push_back(*it);
         }
       }
-      reverse(rv.begin(), rv.end());
+      std::reverse(rv.begin(), rv.end());
       std::string  s;
       Dwm::Gmk::ToString(rv, s);
       rc = Dwm::Gmk::GmkCopy(s);

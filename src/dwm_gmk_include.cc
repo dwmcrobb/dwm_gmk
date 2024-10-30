@@ -28,10 +28,10 @@ extern "C" {
 }
 
 #include <cstdlib>
+#include <cstring>
 #include <filesystem>
 #include <iostream>
 #include <set>
-#include <stack>
 #include <utility>
 
 #include "dwm_gmk.h"

@@ -24,6 +24,7 @@
 #include <shared_mutex>
 #include <string>
 #include <map>
+#include <vector>
 
 namespace Dwm {
 

@@ -22,6 +22,8 @@
 //!  \brief dwm_gmk_reverse GNU make extension function
 //---------------------------------------------------------------------------
 
+#include <algorithm>
+
 #include "dwm_gmk.h"
 #include "DwmGmkUtils.hh"
 

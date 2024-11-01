@@ -37,6 +37,7 @@ extern "C" {
     char *dwm_gmk_files(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_flex(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_include(const char *name, unsigned int argc, char *argv[]);
+    char *dwm_gmk_include_once(const char *name, unsigned int argc, char *argv[]);
 
     //-----------------------------------------------------------------------
     //!  Assigns a value to a variable in a non-global namespace or returns
@@ -61,7 +62,8 @@ extern "C" {
     //!  argv[0].
     //-----------------------------------------------------------------------
     char *dwm_gmk_myvn(const char *name, unsigned int argc, char *argv[]);
-    
+
+    char *dwm_gmk_myvv(const char *name, unsigned int argc, char *argv[]);  
     char *dwm_gmk_popb(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_popf(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_push(const char *name, unsigned int argc, char *argv[]);

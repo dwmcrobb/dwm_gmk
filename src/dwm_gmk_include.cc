@@ -105,3 +105,50 @@ char *dwm_gmk_include(const char *name, unsigned int argc, char *argv[])
   return rc;
 }
 
+//----------------------------------------------------------------------------
+//!  
+//----------------------------------------------------------------------------
+char *dwm_gmk_include_once(const char *name, unsigned int argc, char *argv[])
+{
+  char            *rc = nullptr;
+  bool             verbose = false;
+  vector<string>   includeFiles;
+  if (argc == 2) {
+    if (strcmp(argv[0], "verbose") == 0) {
+      verbose = true;
+    }
+    Dwm::Gmk::ToVector(string_view(argv[1]), includeFiles);
+  }
+  else if (argc == 1) {
+    Dwm::Gmk::ToVector(string_view(argv[0]), includeFiles);
+  }
+  
+  if (argc >= 1) {
+    string  includedFromDirAbs = g_mkfileStack.TopDir();
+    for (auto includeFile : includeFiles) {
+      string  includeFileAbs;
+      if (includeFile.at(0) != '/') {
+        includeFileAbs = includedFromDirAbs + '/' + includeFile;
+      }
+      else {
+        includeFileAbs = includeFile;
+      }
+      includeFileAbs = fs::weakly_canonical(includeFileAbs);
+      if (g_alreadyIncluded.find(includeFileAbs) == g_alreadyIncluded.end()) {
+        if (verbose) {
+          cout << "including " << RelToPwd(includeFileAbs) << " from "
+               << RelToPwd(g_mkfileStack.TopFile()) << '\n';
+          cout.flush();
+        }
+        g_mkfileStack.Push(includeFileAbs);
+        string  includeDirective = string("include ") + includeFileAbs;
+        gmk_floc floc = { __FILE__, __LINE__ };
+        gmk_eval(includeDirective.c_str(), &floc);
+        g_mkfileStack.Pop();
+        g_alreadyIncluded.insert(includeFileAbs);
+      }
+    }
+  }
+  return rc;
+}
+

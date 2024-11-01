@@ -41,12 +41,18 @@ namespace Dwm {
       std::string GetNamespaceString() const;
       void SetVarValue(const std::vector<std::string> & exprVec);
       char *GetVarValue(const std::string & varName);
+      std::string GetVarValueString(const std::string & varName);
       char *GetVarValue(const std::string & ns,
                         const std::string & varName);
+      std::string GetVarValueString(const std::string & ns,                    
+                                    const std::string & varName);
       char *GetVarNames(const std::string & ns);
       char *GetVarNames();
       std::string GetVarNamesString(const std::string & ns);
-      
+      std::string GetVarValuesString(const std::string & rgxstr); 
+      std::string GetVarValuesString(unsigned int argc, char *argv[]); 
+      char *GetVarValues(unsigned int argc, char *argv[]); 
+                                   
     private:
       typedef struct {
         std::string  value;

@@ -10,6 +10,11 @@ origfile = $(myfile)
 $(dwm_my foo2 = $(origfile))
 $(dwm_my foo3 := $(origfile))
 
+$(dwm_my append1 := antelope)
+$(dwm_my append1 += $(dwm_my foo3))
+$(dwm_my append2 = antelope)
+$(dwm_my append2 += $(dwm_my foo2))
+
 origfile = kitten
 
 tests:: test_my test_relpath test_files test_sort test_subdirs test_rgxmatch \
@@ -56,11 +61,13 @@ test_pop::
 test_my::
 	@[ "$(dwm_my foo2)" = "kitten" ] || exit
 	@[ "$(dwm_my foo3)" = "$(myfile)" ] || exit
-	@[ $(words $(dwm_myvn puppy)) -eq 2 ] || exit
-	@[ "$(dwm_myvn puppy)" = "foo2 foo3" ] || exit
-	@[ $(words $(dwm_myvn )) -eq 2 ] || exit
-	@[ "$(dwm_myvn )" = "puppy.foo2 puppy.foo3" ] || exit
-	@[ $(words $(dwm_funcs)) -eq 29 ] || exit
+	@[ $(words $(dwm_myvn puppy)) -eq 4 ] || exit
+	@[ "$(dwm_myvn puppy)" = "append1 append2 foo2 foo3" ] || exit
+	@[ $(words $(dwm_myvn )) -eq 4 ] || exit
+	@[ "$(dwm_myvn )" = "puppy.append1 puppy.append2 puppy.foo2 puppy.foo3" ] || exit
+	@[ $(words $(dwm_funcs)) -eq 31 ] || exit
+	@[ "$(dwm_my append1)" = "antelope $(myfile)" ] || exit
+	@[ "$(dwm_my append2)" = "antelope kitten" ] || exit
 	@echo my tests passed
 
 test_relpath::

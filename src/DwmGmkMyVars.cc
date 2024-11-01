@@ -29,6 +29,7 @@ extern "C" {
 #include <algorithm>
 #include <iostream>
 #include <mutex>
+#include <regex>
 
 #include "DwmGmkMyVars.hh"
 #include "DwmGmkMkfileStack.hh"
@@ -105,8 +106,8 @@ namespace Dwm {
         else {
           ns = GetNamespaceString();
         }
+        string  exprExpanded = Expand(exprStr);
         if (exprVec[1] == ":=") {
-          string  exprExpanded = Expand(exprStr);
           unique_lock  lck(_mtx);
           _vars[ns][varName].value = exprExpanded;
           _vars[ns][varName].expand = false;
@@ -115,6 +116,24 @@ namespace Dwm {
           unique_lock  lck(_mtx);
           _vars[ns][varName].value = exprStr;
           _vars[ns][varName].expand = true;
+        }
+        else if (exprVec[1] == "+=") {
+          unique_lock  lck(_mtx);
+          auto  it = _vars[ns].find(varName);
+          if (it == _vars[ns].end()) {
+            _vars[ns][varName].value = exprStr;
+            _vars[ns][varName].expand = true;
+          }
+          else {
+            if (it->second.expand) {
+              it->second.value += ' ';
+              it->second.value += exprStr;
+            }
+            else {
+              it->second.value += ' ';
+              it->second.value += exprExpanded;
+            }
+          }
         }
       }
       return;
@@ -126,6 +145,18 @@ namespace Dwm {
     char *MyVars::GetVarValue(const std::string & varName)
     {
       char  *value = nullptr;
+      string  valuestr = GetVarValueString(varName);
+      if (! valuestr.empty()) {
+        value = GmkCopy(valuestr);
+      }
+      return value;
+    }
+
+    //------------------------------------------------------------------------
+    //!  
+    //------------------------------------------------------------------------
+    std::string MyVars::GetVarValueString(const std::string & varName)
+    {
       vector<string>  varNameElements;
       string    ns;
       string    realVarName(varName);
@@ -137,8 +168,38 @@ namespace Dwm {
       else {
         ns = GetNamespaceString();
       }
-      value = GetVarValue(ns, realVarName);
-      return value;
+      return GetVarValueString(ns, realVarName);
+    }
+
+    //------------------------------------------------------------------------
+    //!  
+    //------------------------------------------------------------------------
+    std::string MyVars::GetVarValuesString(unsigned int argc, char *argv[])
+    {
+      string  varValues;
+      string  spc;
+      for (unsigned int i = 0; i < argc; ++i) {
+        string  varValue = GetVarValueString(argv[i]);
+        if (! varValue.empty()) {
+          varValues += spc;
+          varValues += varValue;
+          spc = " ";
+        }
+      }
+      return varValues;
+    }
+
+    //------------------------------------------------------------------------
+    //!  
+    //------------------------------------------------------------------------
+    char *MyVars::GetVarValues(unsigned int argc, char *argv[])
+    {
+      char    *varValues = nullptr;
+      string   varValuesStr = GetVarValuesString(argc, argv);
+      if (! varValuesStr.empty()) {
+        varValues = GmkCopy(varValuesStr);
+      }
+      return varValues;
     }
 
     //------------------------------------------------------------------------
@@ -148,22 +209,40 @@ namespace Dwm {
                               const std::string & varName)
     {
       char  *value = nullptr;
+      string  valuestr = GetVarValueString(ns, varName);
+      if (! valuestr.empty()) {
+        value = GmkCopy(valuestr);
+      }
+      return value;
+    }
+
+    //------------------------------------------------------------------------
+    //!  
+    //------------------------------------------------------------------------
+    std::string MyVars::GetVarValueString(const std::string & ns,
+                                          const std::string & varName)
+    {
+      string       value;
       shared_lock  lck(_mtx);
-      auto   nsiter = _vars.find(ns);
+      auto         nsiter = _vars.find(ns);
       if (nsiter != _vars.end()) {
         auto  viter = nsiter->second.find(varName);
         if (viter != nsiter->second.end()) {
           if (viter->second.expand) {
-            value = gmk_expand(viter->second.value.c_str());
+            char  *valuep = gmk_expand(viter->second.value.c_str());
+            if (valuep) {
+              value = valuep;
+              gmk_free(valuep);
+            }
           }
           else {
-            value = GmkCopy(viter->second.value);
+            value = viter->second.value;
           }
         }
       }
       return value;
     }
-
+        
     //------------------------------------------------------------------------
     //!  
     //------------------------------------------------------------------------
@@ -194,6 +273,39 @@ namespace Dwm {
         }
       }
       return names;
+    }
+
+    //------------------------------------------------------------------------
+    //!  
+    //------------------------------------------------------------------------
+    std::string MyVars::GetVarValuesString(const std::string & rgxstr)
+    {
+      string  valuesStr;
+      regex   rgx(rgxstr,std::regex::ECMAScript|std::regex::optimize);
+      smatch  sm;
+      string  spc;
+      
+      for (const auto & ns : _vars) {
+        for (const auto & var : ns.second) {
+          string  fqvarname(ns.first + "." + var.first);
+          if (regex_match(fqvarname, sm, rgx)) {
+            char  *value = nullptr;
+            if (var.second.expand) {
+              value = gmk_expand(var.second.value.c_str());
+            }
+            else {
+              value = GmkCopy(var.second.value);
+            }
+            if (value) {
+              valuesStr += spc;
+              valuesStr += value;
+              spc = " ";
+              gmk_free(value);
+            }
+          }
+        }
+      }
+      return valuesStr;
     }
     
     //------------------------------------------------------------------------

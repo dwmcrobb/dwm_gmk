@@ -76,6 +76,9 @@ char *dwm_gmk_my(const char *name, unsigned int argc, char *argv[])
       }
     }
   }
+  else if (argc > 1) {
+    rc = g_myVars.GetVarValues(argc, argv);
+  }
   return rc;
 }
 
@@ -91,6 +94,21 @@ char *dwm_gmk_myvn(const char *name, unsigned int argc, char *argv[])
   }
   else if ((argc == 1) && argv[0]) {
     rc = g_myVars.GetVarNames(argv[0]);
+  }
+  return rc;
+}
+
+//----------------------------------------------------------------------------
+//!  
+//----------------------------------------------------------------------------
+char *dwm_gmk_myvv(const char *name, unsigned int argc, char *argv[])
+{
+  char  *rc = nullptr;
+  if ((argc == 1) && strlen(argv[0])) {
+    string  rcstr = g_myVars.GetVarValuesString(argv[0]);
+    if (! rcstr.empty()) {
+      rc = Dwm::Gmk::GmkCopy(rcstr);
+    }
   }
   return rc;
 }

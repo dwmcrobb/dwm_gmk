@@ -101,7 +101,7 @@ char *dwm_gmk_myvn(const char *name, unsigned int argc, char *argv[])
 //----------------------------------------------------------------------------
 //!  
 //----------------------------------------------------------------------------
-char *dwm_gmk_myvv(const char *name, unsigned int argc, char *argv[])
+char *dwm_gmk_myvrgx(const char *name, unsigned int argc, char *argv[])
 {
   char  *rc = nullptr;
   if ((argc == 1) && strlen(argv[0])) {

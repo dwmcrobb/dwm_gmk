@@ -58,12 +58,12 @@ extern "C" {
     //!  With an empty argv[0], returns a space-separated list of all
     //!  all variables that were set via 'my ...', with each variable name
     //!  fully qualified ('namespace.varname').  With a non-empty argv[0],
-    //!  returns all variables that were set via 'my ...' from the namespace
+    //!  returns all variables that were set via 'my ...' in the namespace
     //!  argv[0].
     //-----------------------------------------------------------------------
     char *dwm_gmk_myvn(const char *name, unsigned int argc, char *argv[]);
 
-    char *dwm_gmk_myvv(const char *name, unsigned int argc, char *argv[]);  
+    char *dwm_gmk_myvrgx(const char *name, unsigned int argc, char *argv[]);  
     char *dwm_gmk_popb(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_popf(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_push(const char *name, unsigned int argc, char *argv[]);

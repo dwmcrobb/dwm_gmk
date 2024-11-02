@@ -43,7 +43,7 @@ std::vector<dwm_gmk_fn_entry>  dwm_gmk_function_entries = {
   { "dwm_my",            dwm_gmk_my,           1, 0, GMK_FUNC_NOEXPAND },
   { "dwm_myns",          dwm_gmk_myns,         0, 1, GMK_FUNC_DEFAULT  },
   { "dwm_myvn",          dwm_gmk_myvn,         0, 1, GMK_FUNC_DEFAULT  },
-  { "dwm_myvv",          dwm_gmk_myvv,         1, 1, GMK_FUNC_DEFAULT  },
+  { "dwm_myvrgx",        dwm_gmk_myvrgx,       1, 1, GMK_FUNC_DEFAULT  },
   { "dwm_push",          dwm_gmk_push,         0, 1, GMK_FUNC_DEFAULT  },
   { "dwm_popf",          dwm_gmk_popf,         1, 1, GMK_FUNC_DEFAULT  },
   { "dwm_popb",          dwm_gmk_popb,         1, 1, GMK_FUNC_DEFAULT  },

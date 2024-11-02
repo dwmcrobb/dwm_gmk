@@ -38,6 +38,7 @@ std::vector<dwm_gmk_fn_entry>  dwm_gmk_function_entries = {
   { "dwm_cwd",           dwm_gmk_curpath,      0, 1, GMK_FUNC_DEFAULT  },
   { "dwm_files",         dwm_gmk_files,        0, 2, GMK_FUNC_DEFAULT  },
   { "dwm_flex",          dwm_gmk_flex,         1, 0, GMK_FUNC_DEFAULT  },
+  { "dwm_ifcwd",         dwm_gmk_ifcwd,        2, 2, GMK_FUNC_DEFAULT  },
   { "dwm_include",       dwm_gmk_include,      1, 2, GMK_FUNC_DEFAULT  },
   { "dwm_include_once",  dwm_gmk_include_once, 1, 2, GMK_FUNC_DEFAULT  },
   { "dwm_my",            dwm_gmk_my,           1, 0, GMK_FUNC_NOEXPAND },

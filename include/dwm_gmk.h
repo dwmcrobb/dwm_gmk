@@ -36,6 +36,15 @@ extern "C" {
     char *dwm_gmk_curpath(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_files(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_flex(const char *name, unsigned int argc, char *argv[]);
+  
+    //-----------------------------------------------------------------------
+    //!  If called from a makefile in the current directory (CURDIR), returns
+    //!  argv[0].  Else returns argv[1].  Note this requires 'dwm_include' to
+    //!  always be used instead of 'include' in order for the directory of
+    //!  the makefile to be correctly tracked.
+    //-----------------------------------------------------------------------
+    char *dwm_gmk_ifcwd(const char *name, unsigned int argc, char *argv[]);
+    
     char *dwm_gmk_include(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_include_once(const char *name, unsigned int argc, char *argv[]);
 
@@ -63,7 +72,14 @@ extern "C" {
     //-----------------------------------------------------------------------
     char *dwm_gmk_myvn(const char *name, unsigned int argc, char *argv[]);
 
-    char *dwm_gmk_myvrgx(const char *name, unsigned int argc, char *argv[]);  
+    //-----------------------------------------------------------------------
+    //!  Returns the values of all private variables whose name matches the
+    //!  regular expression in @c argv[0], as a concatenated string.  I use
+    //!  this to get similarly named variables of subdirectory makefiles
+    //!  that I've included from a parent directory makefile.
+    //-----------------------------------------------------------------------
+    char *dwm_gmk_myvrgx(const char *name, unsigned int argc, char *argv[]);
+  
     char *dwm_gmk_popb(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_popf(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_push(const char *name, unsigned int argc, char *argv[]);

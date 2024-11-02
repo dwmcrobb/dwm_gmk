@@ -10,6 +10,7 @@ OBJFILESNP     = dwm_gmk_aliasfn.lo \
                  dwm_gmk_files.lo \
                  dwm_gmk_flex.lo \
                  dwm_gmk_funcs.lo \
+                 dwm_gmk_ifcwd.lo \
                  dwm_gmk_include.lo \
                  dwm_gmk_my.lo \
                  dwm_gmk_pushpop.lo \
@@ -22,7 +23,6 @@ OBJFILESNP     = dwm_gmk_aliasfn.lo \
                  dwm_gmk_rgxsearch.lo \
                  dwm_gmk_rgxsubst.lo \
                  dwm_gmk_rotate.lo \
-                 dwm_gmk_setifcwd.lo \
                  dwm_gmk_setup.lo \
                  dwm_gmk_sort.lo \
                  dwm_gmk_subdirs.lo \

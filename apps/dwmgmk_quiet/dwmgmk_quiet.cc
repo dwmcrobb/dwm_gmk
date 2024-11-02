@@ -65,7 +65,7 @@ static int GetCommandOutput(const std::string & msg, const std::string & cmd,
   FILE  *p = popen(cmd.c_str(), "r");
   if (p) {
     if (! msg.empty()) {
-      std::cout << msg << '\n';
+      std::cout << msg << std::endl;
     }
     char    buf[256];
     while (fgets(buf, sizeof(buf), p)) {

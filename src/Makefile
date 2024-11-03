@@ -29,6 +29,7 @@ OBJFILESNP     = dwm_gmk_aliasfn.lo \
                  dwm_gmk_thisdir.lo \
                  dwm_gmk_uniqleft.lo \
                  dwm_gmk_uniqright.lo \
+                 dwm_gmk_vrgx.lo \
                  DwmGmkMkfileStack.lo \
                  DwmGmkMyVars.lo \
                  DwmGmkUtils.lo

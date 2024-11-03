@@ -62,7 +62,8 @@ std::vector<dwm_gmk_fn_entry>  dwm_gmk_function_entries = {
   { "dwm_subdirs",       dwm_gmk_subdirs,      0, 2, GMK_FUNC_DEFAULT  },
   { "dwm_thisdir",       dwm_gmk_thisdir,      0, 1, GMK_FUNC_DEFAULT  },
   { "dwm_uniqleft",      dwm_gmk_uniqleft,     1, 1, GMK_FUNC_DEFAULT  },
-  { "dwm_uniqright",     dwm_gmk_uniqright,    1, 1, GMK_FUNC_DEFAULT  }
+  { "dwm_uniqright",     dwm_gmk_uniqright,    1, 1, GMK_FUNC_DEFAULT  },
+  { "dwm_vrgx",          dwm_gmk_vrgx,         1, 1, GMK_FUNC_DEFAULT  }  
 };
 
 //----------------------------------------------------------------------------

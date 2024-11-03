@@ -98,6 +98,7 @@ extern "C" {
     char *dwm_gmk_thisdir(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_uniqleft(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_uniqright(const char *name, unsigned int argc, char *argv[]);
+    char *dwm_gmk_vrgx(const char *name, unsigned int argc, char *argv[]);
 
   typedef struct {
     const char    *name;

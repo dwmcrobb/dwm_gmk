@@ -20,7 +20,12 @@ origfile = kitten
 tests:: test_my test_relpath test_files test_sort test_subdirs test_rgxmatch \
         test_rgxsearch test_rgxreplace test_rgxsubst test_bison1 test_bison2 \
         test_bison3 test_flex1 test_flex2 test_reverse test_pop test_rotate \
-        test_alias test_uniqleft test_uniqright test_include
+        test_alias test_uniqleft test_uniqright test_include test_vrgx
+
+test_vrgx::
+	@[ $(words $(dwm_vrgx MAKE.+)) -ge 8 ] || exit
+	@[ $(words $(dwm_vrgx .+\.cc)) -ge 2 ] || exit
+	@echo vrgx tests passed
 
 test_include::
 	@[ "$(firstword $(dwm_incstack))" = "$(myfile)" ] || exit
@@ -65,7 +70,7 @@ test_my::
 	@[ "$(dwm_myvn puppy)" = "append1 append2 foo2 foo3" ] || exit
 	@[ $(words $(dwm_myvn )) -eq 4 ] || exit
 	@[ "$(dwm_myvn )" = "puppy.append1 puppy.append2 puppy.foo2 puppy.foo3" ] || exit
-	@[ $(words $(dwm_funcs)) -eq 31 ] || exit
+	@[ $(words $(dwm_funcs)) -eq 33 ] || exit
 	@[ "$(dwm_my append1)" = "antelope $(myfile)" ] || exit
 	@[ "$(dwm_my append2)" = "antelope kitten" ] || exit
 	@echo my tests passed

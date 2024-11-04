@@ -34,7 +34,7 @@
 
 using namespace std;
 
-static Dwm::Gmk::MyVars  g_myVars;
+Dwm::Gmk::MyVars  g_myVars;
 
 //----------------------------------------------------------------------------
 //!  

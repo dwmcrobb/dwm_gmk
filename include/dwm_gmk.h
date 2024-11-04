@@ -93,6 +93,7 @@ extern "C" {
     char *dwm_gmk_rgxsubst(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_rotl(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_rotr(const char *name, unsigned int argc, char *argv[]);
+    char *dwm_gmk_setltlibvars(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_sort(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_subdirs(const char *name, unsigned int argc, char *argv[]);
     char *dwm_gmk_thisdir(const char *name, unsigned int argc, char *argv[]);

@@ -23,6 +23,7 @@ OBJFILESNP     = dwm_gmk_aliasfn.lo \
                  dwm_gmk_rgxsearch.lo \
                  dwm_gmk_rgxsubst.lo \
                  dwm_gmk_rotate.lo \
+                 dwm_gmk_setltlibvars.lo \
                  dwm_gmk_setup.lo \
                  dwm_gmk_sort.lo \
                  dwm_gmk_subdirs.lo \

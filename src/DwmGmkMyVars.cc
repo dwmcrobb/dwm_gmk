@@ -138,7 +138,30 @@ namespace Dwm {
       }
       return;
     }
-    
+
+    //------------------------------------------------------------------------
+    //!  
+    //------------------------------------------------------------------------
+    void MyVars::SetVarValueImmediate(const std::string & varName,
+                                      const std::string & varValue)
+    {
+      vector<string>  varNameElements;
+      string          myVarName(varName);
+      string          ns;
+      if (ToVector(varName, varNameElements, '.')
+          && (varNameElements.size() == 2)) {
+        ns = varNameElements[0];
+        myVarName = varNameElements[1];
+      }
+      else {
+        ns = GetNamespaceString();
+      }
+      unique_lock  lck(_mtx);
+      _vars[ns][myVarName].value = varValue;
+      _vars[ns][myVarName].expand = false;
+      return;
+    }
+
     //------------------------------------------------------------------------
     //!  
     //------------------------------------------------------------------------

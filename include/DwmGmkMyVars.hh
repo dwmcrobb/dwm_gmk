@@ -40,6 +40,9 @@ namespace Dwm {
       char *GetNamespace() const;
       std::string GetNamespaceString() const;
       void SetVarValue(const std::vector<std::string> & exprVec);
+      void SetVarValueImmediate(const std::string & varName,
+                                const std::string & varValue);
+      
       char *GetVarValue(const std::string & varName);
       std::string GetVarValueString(const std::string & varName);
       char *GetVarValue(const std::string & ns,

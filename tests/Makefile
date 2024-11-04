@@ -20,7 +20,13 @@ origfile = kitten
 tests:: test_my test_relpath test_files test_sort test_subdirs test_rgxmatch \
         test_rgxsearch test_rgxreplace test_rgxsubst test_bison1 test_bison2 \
         test_bison3 test_flex1 test_flex2 test_reverse test_pop test_rotate \
-        test_alias test_uniqleft test_uniqright test_include test_vrgx
+        test_alias test_uniqleft test_uniqright test_include test_vrgx \
+	test_ifcwd
+
+test_ifcwd::
+	@[ "$(dwm_ifcwd yes,no)" = "yes" ] || exit
+	@[ "$(dwm_ifcwd no,yes)" = "no" ] || exit
+	@echo ifcwd tests passed
 
 test_vrgx::
 	@[ $(words $(dwm_vrgx MAKE.+)) -ge 8 ] || exit

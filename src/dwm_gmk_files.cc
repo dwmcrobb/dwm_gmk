@@ -61,27 +61,10 @@ char *dwm_gmk_files(const char *name, unsigned int argc, char *argv[])
     rgxstr = ".+";
   }
 
-  std::regex   rgx(rgxstr, rgxflags::ECMAScript|rgxflags::optimize);
-  std::smatch  sm;
-  std::string  filesstr;
-
-  try {
-    std::string  spc;
-    for (auto const & dirEntry : fs::directory_iterator{dirPath}) {
-      if (Dwm::Gmk::IsFile(dirEntry.path())) {
-        std::string  fileName = dirEntry.path().filename().string();
-        if (regex_match(fileName, sm, rgx)) {
-          filesstr += spc;
-          filesstr += fileName;
-          spc = " ";
-        }
-      }
-    }
-  }
-  catch (...) {
-  }
-  
-  if (! filesstr.empty()) {
+  std::vector<std::string>  fileNames;
+  if (Dwm::Gmk::GmkFiles(dirPath, rgxstr, fileNames)) {
+    std::string  filesstr;
+    Dwm::Gmk::ToString(fileNames, filesstr);
     rc = Dwm::Gmk::GmkCopy(filesstr);
   }
   return rc;

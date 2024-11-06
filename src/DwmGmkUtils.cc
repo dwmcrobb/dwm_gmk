@@ -274,6 +274,31 @@ namespace Dwm {
       return cp;
     }
 
+    //------------------------------------------------------------------------
+    //!  
+    //------------------------------------------------------------------------
+    bool GmkFiles(const std::string & p, const std::string & expr,
+                  std::vector<std::string> & files)
+    {
+      files.clear();
+      
+      std::regex   rgx(expr, regex::ECMAScript | regex::optimize);
+      std::smatch  sm;
+      try {
+        for (auto const & dirEntry : fs::directory_iterator{p}) {
+          if (IsFile(dirEntry.path())) {
+            std::string  fileName = dirEntry.path().filename().string();
+            if (regex_match(fileName, sm, rgx)) {
+              files.push_back(fileName);
+            }
+          }
+        }
+      }
+      catch (...) {
+      }
+      return (! files.empty());
+    }
+    
   }  // namespace Gmk
 
 }  // namespace Dwm

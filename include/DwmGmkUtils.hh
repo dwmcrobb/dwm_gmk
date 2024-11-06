@@ -114,9 +114,18 @@ namespace Dwm {
     std::string Expand(const std::string & expr);
 
     //------------------------------------------------------------------------
-    //!  
+    //!  Returns a pointer to a C-style string copy of @c s that was allocated
+    //!  with gmk_alloc().
     //------------------------------------------------------------------------
     char *GmkCopy(const std::string & s);
+
+    //------------------------------------------------------------------------
+    //!  Populate @c files with all files in directory at path @c p whose
+    //!  filename matches the ECMAScript regular expression @c expr.  Returns
+    //!  true if any filenames matched (same as (! files.empty())).
+    //------------------------------------------------------------------------
+    bool GmkFiles(const std::string & p, const std::string & expr,
+                  std::vector<std::string> & files);
     
   }  // namespace Gmk
 

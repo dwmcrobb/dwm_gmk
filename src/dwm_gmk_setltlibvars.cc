@@ -41,6 +41,17 @@ using namespace std;
 //----------------------------------------------------------------------------
 //!  
 //----------------------------------------------------------------------------
+static void dwm_gmk_unique_vec(vector<string> & v)
+{
+  std::sort(v.begin(), v.end());
+  auto  endit = std::unique(v.begin(), v.end());
+  v.erase(endit, v.end());
+  return;
+}
+
+//----------------------------------------------------------------------------
+//!  
+//----------------------------------------------------------------------------
 static void dwm_gmk_set_objs(const std::string & ns, const string & thisdir,
                              const string & objdir,
                              const vector<string> & srcsv)
@@ -48,38 +59,29 @@ static void dwm_gmk_set_objs(const std::string & ns, const string & thisdir,
   namespace  fs = std::filesystem;
   string  objdirabs = fs::weakly_canonical(thisdir + "/" + objdir);
   g_myVars.SetVarValueImmediate(ns + ".ObjDir", objdirabs);
-  regex   rgx("(.+)\\.(cc|y|lex|ll)$", regex::ECMAScript | regex::optimize);
-  vector<string>  objs;
-  vector<string>  sharedObjs;
-  vector<string>  rmObjs;
+  vector<string>  objs, shObjs, rmObjs;
   for (const auto & src : srcsv) {
-    objs.push_back(regex_replace(src, rgx, objdirabs + "/$1.o"));
-    sharedObjs.push_back(regex_replace(src, rgx, objdirabs + "/$1.lo"));
-    rmObjs.push_back(regex_replace(src, rgx, objdirabs + "/.libs/$1.o"));
+    string  srcStem = fs::path(src).stem().string();
+    objs.push_back(objdirabs + "/" + srcStem + ".o");
+    shObjs.push_back(objdirabs + "/" + srcStem + ".lo");
+    rmObjs.push_back(objdirabs + "/.libs/" + srcStem + ".o");
   }
-  std::sort(objs.begin(), objs.end());
-  auto  endobj = std::unique(objs.begin(), objs.end());
-  objs.erase(endobj, objs.end());
 
   string  objsstr;
+  dwm_gmk_unique_vec(objs);
   Dwm::Gmk::ToString(objs, objsstr);
   g_myVars.SetVarValueImmediate(ns + ".Objs", objsstr);
-  
-  std::sort(sharedObjs.begin(), sharedObjs.end());
-  auto  endshobj = std::unique(sharedObjs.begin(), sharedObjs.end());
-  sharedObjs.erase(endshobj, sharedObjs.end());
 
   string  shobjsstr;
-  Dwm::Gmk::ToString(sharedObjs, shobjsstr);
+  dwm_gmk_unique_vec(shObjs);
+  Dwm::Gmk::ToString(shObjs, shobjsstr);
   g_myVars.SetVarValueImmediate(ns + ".SharedObjs", shobjsstr);
 
-  std::sort(rmObjs.begin(), rmObjs.end());
-  auto  endrmobj = std::unique(rmObjs.begin(), rmObjs.end());
-  rmObjs.erase(endrmobj, rmObjs.end());
-  
   string  rmobjsstr;
+  dwm_gmk_unique_vec(rmObjs);
   Dwm::Gmk::ToString(rmObjs, rmobjsstr);
-  g_myVars.SetVarValueImmediate(ns + ".RmTargets",
+
+  g_myVars.SetVarValueImmediate(ns + ".Clean",
                                 objsstr + " " + shobjsstr + " " + rmobjsstr);
   return;
 }
@@ -94,14 +96,12 @@ static void dwm_gmk_set_deps(const std::string & ns, const string & thisdir,
   namespace  fs = std::filesystem;
   string  depsdirabs = fs::weakly_canonical(thisdir + "/" + depsdir);
   g_myVars.SetVarValueImmediate(ns + ".DepsDir", depsdirabs);
-  regex   rgx("(.+)\\.(cc|y|lex|ll)$", regex::ECMAScript | regex::optimize);
   vector<string>  deps;
   for (const auto & src : srcsv) {
-    deps.push_back(regex_replace(src, rgx, depsdirabs + "/$1_deps"));
+    string  srcStem = fs::path(src).stem().string();
+    deps.push_back(depsdirabs + "/" + srcStem + "_deps");
   }
-  std::sort(deps.begin(), deps.end());
-  auto  enddep = std::unique(deps.begin(), deps.end());
-  deps.erase(enddep, deps.end());
+  dwm_gmk_unique_vec(deps);
 
   string  depsstr;
   Dwm::Gmk::ToString(deps, depsstr);
@@ -113,29 +113,90 @@ static void dwm_gmk_set_deps(const std::string & ns, const string & thisdir,
 //----------------------------------------------------------------------------
 //!  
 //----------------------------------------------------------------------------
+static void dwm_gmk_set_flex_outs(const std::string & ns,
+                                  const std::string & thisdir,
+                                  const std::vector<std::string> & srcsv)
+{
+  namespace  fs = std::filesystem;
+  
+  vector<string>  flexOuts;
+  for (const auto & src : srcsv) {
+    string  ex = fs::path(src).extension();
+    if (ex == ".lex") {
+      string  srcStem = fs::path(src).stem();
+      flexOuts.push_back(thisdir + "/" + srcStem + ".cc");
+    }
+  }
+  if (! flexOuts.empty()) {
+    string  flexOutsStr;
+    Dwm::Gmk::ToString(flexOuts, flexOutsStr);
+    g_myVars.SetVarValueImmediate(ns + ".FlexOuts", flexOutsStr);
+    g_myVars.SetVarValueImmediate(ns + ".Clean",
+                                  g_myVars.GetVarValueString(ns + ".Clean")
+                                  + " " + flexOutsStr);
+  }
+  return;
+}
+
+//----------------------------------------------------------------------------
+//!  
+//----------------------------------------------------------------------------
+static void dwm_gmk_set_bison_outs(const std::string & ns,
+                                   const std::string & thisdir,
+                                   const std::vector<std::string> & srcsv)
+{
+  namespace  fs = std::filesystem;
+
+  vector<string>  bisonOuts;
+  for (const auto & src : srcsv) {
+    string  ex = fs::path(src).extension();
+    if (ex == ".y") {
+      string  srcStem = fs::path(src).stem();
+      bisonOuts.push_back(thisdir + "/" + srcStem + ".cc");
+      bisonOuts.push_back(thisdir + "/" + srcStem + ".hh");
+    }
+  }
+  if (! bisonOuts.empty()) {
+    string  bisonOutsStr;
+    Dwm::Gmk::ToString(bisonOuts, bisonOutsStr);
+    g_myVars.SetVarValueImmediate(ns + ".BisonOuts", bisonOutsStr);
+    g_myVars.SetVarValueImmediate(ns + ".Clean",
+                                  g_myVars.GetVarValueString(ns + ".Clean")
+                                  + " " + bisonOutsStr);
+  }
+  return;
+}
+
+//----------------------------------------------------------------------------
+//!  
+//----------------------------------------------------------------------------
 char *dwm_gmk_setltlibvars(const char *name, unsigned int argc, char *argv[])
 {
   namespace  fs = std::filesystem;
   
-  if (argc == 6) {
+  if (argc == 5) {
     string  ns(argv[0]);
-    string  libdir(argv[1]);
-    string  lib(argv[2]);
-    string  objdir(argv[3]);
-    string  depsdir(argv[4]);
-    string  srcs(argv[5]);
+    string  lib(argv[1]);
+    string  objdir(argv[2]);
+    string  depsdir(argv[3]);
+    string  srcsrgx(argv[4]);
 
-    vector<string>  srcsv;
-    Dwm::Gmk::ToVector(srcs, srcsv);
     string  thisdir = g_mkfileStack.TopDir();
+    vector<string>  srcsv;
+    Dwm::Gmk::GmkFiles(thisdir, srcsrgx, srcsv);
+    string  srcsstr;
+    Dwm::Gmk::ToString(srcsv, srcsstr);
+    g_myVars.SetVarValueImmediate(ns + ".Srcs", srcsstr);
+    
     dwm_gmk_set_objs(ns, thisdir, objdir, srcsv);
     dwm_gmk_set_deps(ns, thisdir, depsdir, srcsv);
-
-    string  libdirabs = fs::weakly_canonical(thisdir + "/" + libdir);
-    g_myVars.SetVarValueImmediate(ns + ".Lib", libdirabs + "/" + lib);
-    g_myVars.SetVarValueImmediate(ns + ".Targets", libdirabs + "/" + lib);
-    g_myVars.SetVarValueImmediate(ns + ".LtRmTargets",
-                                  libdirabs + "/" + lib);
+    dwm_gmk_set_flex_outs(ns, thisdir, srcsv);
+    dwm_gmk_set_bison_outs(ns, thisdir, srcsv);
+    
+    string  libabs = fs::weakly_canonical(thisdir + "/" + lib);
+    g_myVars.SetVarValueImmediate(ns + ".Lib", libabs);
+    g_myVars.SetVarValueImmediate(ns + ".Targets", libabs);
+    g_myVars.SetVarValueImmediate(ns + ".LtClean", libabs);
   }
   return nullptr;
 }

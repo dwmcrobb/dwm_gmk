@@ -58,7 +58,7 @@ std::vector<dwm_gmk_fn_entry>  dwm_gmk_function_entries = {
   { "dwm_rgxsubst",      dwm_gmk_rgxsubst,     3, 3, GMK_FUNC_DEFAULT  },
   { "dwm_rotl",          dwm_gmk_rotl,         1, 2, GMK_FUNC_DEFAULT  },
   { "dwm_rotr",          dwm_gmk_rotr,         1, 2, GMK_FUNC_DEFAULT  },
-  { "dwm_setltlibvars",  dwm_gmk_setltlibvars, 6, 6, GMK_FUNC_DEFAULT  },
+  { "dwm_setltlibvars",  dwm_gmk_setltlibvars, 5, 5, GMK_FUNC_DEFAULT  },
   { "dwm_sort",          dwm_gmk_sort,         1, 1, GMK_FUNC_DEFAULT  },
   { "dwm_subdirs",       dwm_gmk_subdirs,      0, 2, GMK_FUNC_DEFAULT  },
   { "dwm_thisdir",       dwm_gmk_thisdir,      0, 1, GMK_FUNC_DEFAULT  },

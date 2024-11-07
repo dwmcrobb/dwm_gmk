@@ -7,7 +7,7 @@ fi
 
 TAGNAME=$1
 
-tagmatch="dwm_gmk\-[0-9]+\.[0-9]+\.[0-9]+"
+tagmatch="dwmgmk\-[0-9]+\.[0-9]+\.[0-9]+"
 
 TagExists () {
     git describe --tags --exact-match "${TAGNAME}" > /dev/null 2>&1

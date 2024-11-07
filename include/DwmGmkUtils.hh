@@ -74,12 +74,13 @@ namespace Dwm {
                   char sep = ' ');
     
     //------------------------------------------------------------------------
-    //!  
+    //!  Returns true if @c p appears to be a file (regular, block special,
+    //!  character special, FIFO or socket.
     //------------------------------------------------------------------------
     bool IsFile(const std::filesystem::path & p);
 
     //------------------------------------------------------------------------
-    //!  
+    //!  Puts the contents of MAKEFILE_LIST into @c makefiles.
     //------------------------------------------------------------------------
     bool GetMakefilesList(std::vector<std::string> & makefiles);
 
@@ -109,7 +110,7 @@ namespace Dwm {
     std::string RelTop(const std::string & p);
 
     //------------------------------------------------------------------------
-    //!  
+    //!  Returns the GNU make expansion of @c expr.
     //------------------------------------------------------------------------
     std::string Expand(const std::string & expr);
 
@@ -128,27 +129,32 @@ namespace Dwm {
                   std::vector<std::string> & files);
 
     //------------------------------------------------------------------------
-    //!  
+    //!  Returns the unique entries of @c v as a concantenated string,
+    //!  retaining the leftmost duplicates (removing the rightmost).
     //------------------------------------------------------------------------
     std::string UniqLeft(const std::vector<std::string> & v);
     
     //------------------------------------------------------------------------
-    //!  
+    //!  Returns the unique substrings of @c s as a concantenated string,
+    //!  retaining the lefttmost duplicates (removing the rightmost).
+    //!  Substrings are strings with no spaces (space is the separator).
     //------------------------------------------------------------------------
     std::string UniqLeft(const std::string & s);
 
     //------------------------------------------------------------------------
-    //!  
+    //!  Returns the unique entries of @c v as a concantenated string,
+    //!  retaining the rightmost duplicates (removing the lefttmost).
     //------------------------------------------------------------------------
     std::string UniqRight(const std::vector<std::string> & v);
 
     //------------------------------------------------------------------------
-    //!  
+    //!  Returns the unique substrings of @c s as a concantenated string,
+    //!  retaining the rightmost duplicates (removing the lefttmost).
+    //!  Substrings are strings with no spaces (space is the separator).
     //------------------------------------------------------------------------
     std::string UniqRight(const std::string & s);
     
   }  // namespace Gmk
-
   
 }  // namespace Dwm
 

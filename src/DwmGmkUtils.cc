@@ -29,6 +29,7 @@ extern "C" {
 #include <cstdlib>
 #include <cstring>
 #include <regex>
+#include <set>
 
 #include "DwmGmkUtils.hh"
 
@@ -298,7 +299,64 @@ namespace Dwm {
       }
       return (! files.empty());
     }
+
+    //------------------------------------------------------------------------
+    //!  
+    //------------------------------------------------------------------------
+    std::string UniqLeft(const std::vector<std::string> & v)
+    {
+      std::string               rc;
+      std::vector<std::string>  rv;
+      std::set<std::string>     seen;
+      for (const auto & word : v) {
+        if (seen.find(word) == seen.end()) {
+          seen.insert(word);
+          rv.push_back(word);
+        }
+      }
+      ToString(rv, rc);
+      return rc;
+    }
+
+    //------------------------------------------------------------------------
+    //!  
+    //------------------------------------------------------------------------
+    std::string UniqLeft(const std::string & s)
+    {
+      std::vector<std::string>  v;
+      ToVector(s, v);
+      return UniqLeft(v);
+    }
+
+    //------------------------------------------------------------------------
+    //!  
+    //------------------------------------------------------------------------
+    std::string UniqRight(const std::vector<std::string> & v)
+    {
+      std::string               s;
+      std::vector<std::string>  rv;
+      std::set<std::string>     seen;
+      for (auto it = v.crbegin(); it != v.crend(); ++it) {
+        if (seen.find(*it) == seen.end()) {
+          seen.insert(*it);
+          rv.push_back(*it);
+        }
+      }
+      std::reverse(rv.begin(), rv.end());
+      ToString(rv, s);
+      return s;
+    }
     
+    //------------------------------------------------------------------------
+    //!  
+    //------------------------------------------------------------------------
+    std::string UniqRight(const std::string & s)
+    {
+      std::vector<std::string>  v;
+      ToVector(s, v);
+      return UniqRight(v);
+    }
+
   }  // namespace Gmk
 
 }  // namespace Dwm

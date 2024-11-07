@@ -1,4 +1,4 @@
-APPS      := dwmgmk_quiet
+APPS      := dwmgmk_quiet dwmgmk_uniqleft dwmgmk_uniqright
 APPSCLEAN := $(APPS:%=%-clean)
 TARPREP   := $(APPS:%=%-tarprep)
 DISTCLEAN := $(APPS:%=%-distclean)

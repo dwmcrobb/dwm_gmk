@@ -34,21 +34,8 @@ char *dwm_gmk_uniqleft(const char *name, unsigned int argc, char *argv[])
 {
   char  *rc = nullptr;
   if (argc == 1) {
-    std::string_view  sv(argv[0]);
-    std::vector<std::string>  v;
-    if (Dwm::Gmk::ToVector(sv, v)) {
-      std::vector<std::string> rv;
-      std::set<std::string>  seen;
-      for (const auto & word : v) {
-        if (seen.find(word) == seen.end()) {
-          seen.insert(word);
-          rv.push_back(word);
-        }
-      }
-      std::string  s;
-      Dwm::Gmk::ToString(rv, s);
-      rc = Dwm::Gmk::GmkCopy(s);
-    }
+    std::string  s = Dwm::Gmk::UniqLeft(argv[0]);
+    rc = Dwm::Gmk::GmkCopy(s);
   }
   return rc;
 }

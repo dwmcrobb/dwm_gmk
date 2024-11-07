@@ -76,7 +76,7 @@ test_my::
 	@[ "$(dwm_myvn puppy)" = "append1 append2 foo2 foo3" ] || exit
 	@[ $(words $(dwm_myvn )) -eq 4 ] || exit
 	@[ "$(dwm_myvn )" = "puppy.append1 puppy.append2 puppy.foo2 puppy.foo3" ] || exit
-	@[ $(words $(dwm_funcs)) -eq 33 ] || exit
+	@[ $(words $(dwm_funcs)) -eq 34 ] || exit
 	@[ "$(dwm_my append1)" = "antelope $(myfile)" ] || exit
 	@[ "$(dwm_my append2)" = "antelope kitten" ] || exit
 	@echo my tests passed

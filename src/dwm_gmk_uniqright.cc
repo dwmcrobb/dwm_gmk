@@ -33,24 +33,10 @@
 //----------------------------------------------------------------------------
 char *dwm_gmk_uniqright(const char *name, unsigned int argc, char *argv[])
 {
-  char  *rc = 0;
+  char  *rc = nullptr;
   if (argc == 1) {
-    std::string_view  sv(argv[0]);
-    std::vector<std::string>  v;
-    if (Dwm::Gmk::ToVector(sv, v)) {
-      std::vector<std::string> rv;
-      std::set<std::string>  seen;
-      for (auto it = v.crbegin(); it != v.crend(); ++it) {
-        if (seen.find(*it) == seen.end()) {
-          seen.insert(*it);
-          rv.push_back(*it);
-        }
-      }
-      std::reverse(rv.begin(), rv.end());
-      std::string  s;
-      Dwm::Gmk::ToString(rv, s);
-      rc = Dwm::Gmk::GmkCopy(s);
-    }
+    std::string  s = Dwm::Gmk::UniqRight(argv[0]);
+    rc = Dwm::Gmk::GmkCopy(s);
   }
   return rc;
 }
